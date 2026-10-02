@@ -1,0 +1,51 @@
+[package]
+name = "mc-proxy"
+version = "0.15.0"
+edition = "2024"
+rust-version = "1.88"
+description = "High-performance Minecraft Java TCP forwarding proxy"
+license = "AGPL-3.0-only"
+
+[dependencies]
+anyhow = "1"
+axum = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+socket2 = { version = "0.6", features = ["all"] }
+thiserror = "2"
+tokio = { version = "1", features = [
+    "io-util",
+    "fs",
+    "macros",
+    "net",
+    "process",
+    "rt-multi-thread",
+    "signal",
+    "sync",
+    "time",
+] }
+toml = "0.9"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+
+# geyserlite 0.3.x 上游代码在非 Unix 目标无法编译（OpenOptionsExt::mode），
+# 因此内置托管翻译层只在 Linux 目标启用；Windows 使用外部 Geyser Standalone。
+[target.'cfg(target_os = "linux")'.dependencies]
+geyserlite = { version = "0.3", optional = true, default-features = false }
+
+[features]
+# 默认启用内置 GeyserLite：Linux 目标编译期接入 crate，运行时按配置决定是否启动；
+# 其他目标上该特性为空操作（runtime.available = false）。
+default = ["geyserlite", "geyserlite-download"]
+# 接入 geyserlite crate，允许 provider = "geyserlite"。
+geyserlite = ["dep:geyserlite"]
+# 把 libgeyserlite.so 内嵌进二进制，构建期下载并校验 sha256。
+geyserlite-embed = ["geyserlite", "geyserlite/embed"]
+# 运行时按需从 GitHub Release 下载原生库，带 sha256 校验。
+geyserlite-download = ["geyserlite", "geyserlite/download"]
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = true
