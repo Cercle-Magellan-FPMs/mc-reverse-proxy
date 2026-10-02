@@ -80,7 +80,7 @@
         <div class="page-intro">
           <div><span class="section-index">01 / OVERVIEW</span><h2>Ingress status</h2><p>Route connections to backends by the hostname in the Minecraft handshake, using one IP and port.</p></div>
           <button class="outline-button" data-go-page="rules">
-            View routess
+            View routes
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
           </button>
         </div>
@@ -138,7 +138,7 @@
           <article class="panel system-panel">
             <div class="panel-header"><div><p class="panel-kicker">INSTANCE HEALTH</p><h2>Instance status</h2></div><span class="live-label"><i></i>LIVE</span></div>
             <dl class="system-list">
-              <div><dt>Service Version</dt><dd id="instanceVersion">--</dd></div>
+              <div><dt>Service version</dt><dd id="instanceVersion">--</dd></div>
               <div><dt>Uptime</dt><dd id="instanceUptime">--</dd></div>
               <div><dt>Backend failures</dt><dd id="instanceBackendFailures">0</dd></div>
               <div><dt>Forwarding failures</dt><dd id="instanceForwardFailures">0</dd></div>
@@ -234,9 +234,9 @@
             <section class="protocol-section full" id="geyserliteSection" aria-labelledby="geyserliteFieldsTitle" hidden>
               <p class="panel-kicker full" id="geyserliteFieldsTitle">GeyserLite runtime settings</p>
               <div class="nested-fields" id="geyserliteFields">
-                <label><span>Run Mode</span><select name="geyser_mode"><option value="embedded">Embedded · load in process (default)</option><option value="subprocess">Subprocess · isolated child process</option></select><small>Embedded mode has less overhead, but a native library crash stops YvLink. Subprocess mode provides isolation.</small></label>
-                <label><span>MOTD First line</span><input name="geyser_motd_line1" maxlength="64"></label>
-                <label><span>MOTD Second line</span><input name="geyser_motd_line2" maxlength="64"></label>
+                <label><span>Run mode</span><select name="geyser_mode"><option value="embedded">Embedded · load in process (default)</option><option value="subprocess">Subprocess · isolated child process</option></select><small>Embedded mode has less overhead, but a native library crash stops YvLink. Subprocess mode provides isolation.</small></label>
+                <label><span>MOTD first line</span><input name="geyser_motd_line1" maxlength="64"></label>
+                <label><span>MOTD second line</span><input name="geyser_motd_line2" maxlength="64"></label>
                 <label class="geyser-embedded-only"><span>libgeyserlite.so path</span><input name="geyser_library_path" placeholder="Leave blank for automatic detection or download"></label>
                 <label class="geyser-subprocess-only" hidden><span>Native executable path</span><input name="geyser_binary_path" placeholder="Leave blank for automatic detection or download"></label>
                 <label class="toggle-field full"><span><strong>Offline mode</strong><small>Disables downloads. Provide the native library or executable through a path or an embedded build.</small></span><input name="geyser_offline" type="checkbox"><i></i></label>
@@ -244,7 +244,7 @@
                 <p class="field-note full">The default build downloads libgeyserlite.so from a GitHub release and verifies its SHA-256 checksum. For an offline deployment, build with <code>--features geyserlite-embed</code> or set <code>GEYSERLITE_LIBRARY</code>.</p>
               </div>
             </section>
-            <label class="toggle-field ingress-toggle full"><span><strong>Enable crossplay monitoring</strong><small>When enabled, the console uses RakNet Ping to verify that the Geyser is truly listening, rather than showing only the configuration as saved.</small></span><input name="enabled" type="checkbox"><i></i></label>
+            <label class="toggle-field ingress-toggle full"><span><strong>Enable crossplay monitoring</strong><small>When enabled, the console uses RakNet Ping to check whether Geyser is responding.</small></span><input name="enabled" type="checkbox"><i></i></label>
             <div class="form-actions"><button class="primary-button" type="submit">Save crossplay settings</button></div>
           </form>
         </article>
@@ -252,7 +252,7 @@
           <article class="panel crossplay-status-panel">
             <div class="panel-header"><div><p class="panel-kicker">VIALITE SIDECAR</p><h2>Backend compatibility</h2></div><span class="live-label off" id="viaLiveLabel"><i></i><span id="viaHealthLabel">Not enabled</span></span></div>
             <dl class="system-list">
-              <div><dt>Run Mode</dt><dd>Isolated subprocess</dd></div>
+              <div><dt>Run mode</dt><dd>Isolated subprocess</dd></div>
               <div><dt>Ingress protocol</dt><dd id="viaGateProtocol">--</dd></div>
               <div><dt>Backend protocol</dt><dd id="viaBackendVersion">--</dd></div>
               <div><dt>Managed backends</dt><dd id="viaManagedBackends">--</dd></div>
@@ -293,7 +293,7 @@
           </article>
         </div>
         <article class="panel settings-panel via-settings-panel">
-          <div class="panel-header"><div><p class="panel-kicker">MANAGED VIALITE</p><h2>Java Backend compatibility</h2></div><span class="settings-hint">Install the ViaLite runtime before enabling this feature</span></div>
+          <div class="panel-header"><div><p class="panel-kicker">MANAGED VIALITE</p><h2>Java backend compatibility</h2></div><span class="settings-hint">Install the ViaLite runtime before enabling this feature</span></div>
           <form id="viaForm" class="form-grid">
             <label><span>ViaLite executable</span><input name="binary_path" placeholder="/opt/mc-proxy/vialite/vialite"><small>Use an absolute path to the installed ViaLite executable.</small></label>
             <label><span>Runtime directory</span><input name="runtime_dir" placeholder="/run/mc-proxy/vialite" required><small>Temporary managed JSON files are stored here and cleaned up after restart.</small></label>
@@ -312,8 +312,8 @@
             <label><span>Handshake timeout</span><span class="input-unit"><input name="handshake_timeout_ms" type="number" min="1" required><b>ms</b></span><small>Maximum time to read the hostname from a Minecraft Java handshake.</small></label>
             <label><span>Graceful shutdown period</span><span class="input-unit"><input name="shutdown_grace_secs" type="number" min="1" max="300" required><b>s</b></span><small>Time allowed for existing connections to close during shutdown.</small></label>
             <label><span>Per-connection copy buffer</span><span class="input-unit"><input name="copy_buffer_bytes" type="number" min="4096" max="1048576" step="1024" required><b>bytes</b></span><small>Allocated per connection and direction.</small></label>
-            <label><span>Kernel Socket buffer</span><span class="input-unit"><input name="socket_buffer_bytes" type="number" min="0" max="16777216" step="1024" required><b>bytes</b></span><small>Set to 0 to use the operating system default.</small></label>
-            <label><span>Listen Backlog</span><span class="input-unit"><input name="listen_backlog" type="number" min="1" max="65535" required><b>conn</b></span><small>Length of kernel connection queue waiting for accept.</small></label>
+            <label><span>Kernel socket buffer</span><span class="input-unit"><input name="socket_buffer_bytes" type="number" min="0" max="16777216" step="1024" required><b>bytes</b></span><small>Set to 0 to use the operating system default.</small></label>
+            <label><span>Listen backlog</span><span class="input-unit"><input name="listen_backlog" type="number" min="1" max="65535" required><b>conn</b></span><small>Length of kernel connection queue waiting for accept.</small></label>
             <label><span>Statistics log interval</span><span class="input-unit"><input name="stats_interval_secs" type="number" min="1" required><b>s</b></span><small>How often aggregate statistics are logged.</small></label>
             <label class="toggle-field"><span><strong>TCP_NODELAY</strong><small>Reduce delays from Nagle's algorithm for small Minecraft packets.</small></span><input name="tcp_nodelay" type="checkbox"><i></i></label>
             <label class="toggle-field"><span><strong>SO_REUSEPORT</strong><small>Enable only when multiple Linux instances share this port.</small></span><input name="reuse_port" type="checkbox"><i></i></label>
@@ -334,7 +334,7 @@
       <form id="ruleForm" class="form-grid compact">
         <label><span>Rule ID</span><input name="id" pattern="[A-Za-z0-9_-]{1,32}" maxlength="32" required><small>Cannot be changed after saving, only letters, numbers, dashes and underscores are allowed.</small></label>
         <label><span>Display name</span><input name="name" maxlength="64" required></label>
-        <label class="full"><span>Match Host</span><input name="host" placeholder="play.example.com, *.example.com" required><small>Separate hosts with commas. Wildcards * and ? are supported; put a standalone * last.</small></label>
+        <label class="full"><span>Match host</span><input name="host" placeholder="play.example.com, *.example.com" required><small>Separate hosts with commas. Wildcards * and ? are supported; put a standalone * last.</small></label>
         <label class="full"><span>Backend pool</span><textarea name="backend" rows="3" placeholder="backend-a.example.com:25565&#10;backend-b.example.com:25565" required></textarea><small>Enter host:port addresses, one per line or separated by commas (up to 128). YvLink tries another backend if one fails.</small></label>
         <label class="full"><span>Load balancing strategy</span><select name="strategy"><option value="sequential">Sequential failover</option><option value="random">Random</option><option value="round-robin">Round robin</option><option value="least-connections">Least connections</option><option value="lowest-latency">Lowest latency</option></select><small>Sequential mode prefers the first healthy backend. Other strategies select a target, then try the remaining backends on failure.</small></label>
         <label class="full"><span>Real IP forwarding (PROXY Protocol)</span><select name="proxy_protocol" aria-describedby="proxyProtocolHelp"><option value="off">Off (default)</option><option value="v1">v1 · text header</option><option value="v2">v2 · binary header</option></select><small id="proxyProtocolHelp" class="field-warning">Enable only if the backend supports the selected PROXY Protocol version. A standard Minecraft server cannot read this header. Restrict the backend port to trusted proxy connections.</small></label>
@@ -356,7 +356,7 @@
         <section class="protocol-section full" aria-labelledby="statusSectionTitle">
           <label class="toggle-field"><span><strong id="statusSectionTitle">Proxy-managed Status response</strong><small>Generate a response or selectively override backend fields while preserving mod metadata.</small></span><input name="status_enabled" type="checkbox" aria-controls="statusFields"><i></i></label>
           <div class="nested-fields" id="statusFields" hidden>
-            <label><span>Status source</span><select name="status_mode"><option value="custom">Generated by proxy</option><option value="backend">Backend with overrides</option></select><small>Module server recommended backend mode, forgeData, modinfo and favicon.</small></label>
+            <label><span>Status source</span><select name="status_mode"><option value="custom">Generated by proxy</option><option value="backend">Backend with overrides</option></select><small>Use backend mode for modded servers to preserve forgeData, modinfo, and favicon.</small></label>
             <label class="backend-status-only"><span>Cache TTL</span><span class="input-unit"><input name="status_cache_ttl_secs" type="number" min="-1" max="86400"><b>s</b></span><small>Set to -1 to disable caching. Entries are cached per backend and client protocol.</small></label>
             <label class="full"><span>MOTD / Text Component</span><textarea name="status_motd" rows="3" maxlength="2048" placeholder="Leave blank to preserve backend value"></textarea><small>Accepts § color codes or a JSON text component. Leave blank in backend mode to preserve the backend value.</small></label>
             <label><span>Displayed version</span><input name="status_version_name" maxlength="64" placeholder="Preserve backend value"></label>
