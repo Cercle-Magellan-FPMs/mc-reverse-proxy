@@ -1,13 +1,6 @@
 name: Deploy API documentation
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - docs/api.html
-      - assets/icon.png
-      - .github/workflows/pages.yml
   workflow_dispatch:
 
 permissions:
