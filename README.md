@@ -14,6 +14,8 @@
   </p>
 </div>
 
+> **Downstream fork of [baiyun1123/YvLink](https://github.com/baiyun1123/YvLink)** (v0.15.0). This repository maintains an English translation of the Web console, API documentation, API messages, and logs. The original project and its license remain credited to the upstream author.
+
 ![YvLink bilingual architecture: players connect through the proxy to multiple backends, managed by a web control panel / YvLink 双语架构：玩家经智能代理连接多个后端，并由 Web 控制台管理](assets/readme-architecture-bilingual.png)
 
 ---

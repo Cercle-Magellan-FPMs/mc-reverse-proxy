@@ -22,8 +22,8 @@
     modalReturnFocus: null,
   };
 
-  // v0.14 使用 sessionStorage；升级后把同一浏览器标签页里的既有登录迁移为
-  // localStorage，避免刷新、恢复标签页或重新打开同源控制台时重复输入令牌。
+  // Migrate existing v0.14 sessionStorage login to localStorage in this tab
+  // so a refresh or reopening the console does not require the token again.
   if (state.token && !localStorage.getItem(TOKEN_STORAGE_KEY)) {
     localStorage.setItem(TOKEN_STORAGE_KEY, state.token);
     sessionStorage.removeItem(LEGACY_TOKEN_STORAGE_KEY);
@@ -43,7 +43,7 @@
       showAuth();
       throw new Error("Invalid or missing admin token");
     }
-    if (!response.ok || !payload.ok) throw new Error(payload.error?.message || `Request failed:${response.status}`);
+    if (!response.ok || !payload.ok) throw new Error(payload.error?.message || `Request failed: ${response.status}`);
     return payload.data;
   }
 
@@ -141,7 +141,7 @@
       updated: { label: "Update completed", tone: "online" },
       deferred: { label: "Waiting for service", tone: "pending" },
       failed: { label: "Update failed", tone: "error" },
-      "rolled-back": { label: "Rolling Back", tone: "error" },
+      "rolled-back": { label: "Rolled back", tone: "error" },
       unknown: { label: "Status unknown", tone: "pending" },
     })[value] || { label: value || "Status unknown", tone: "pending" };
   }
@@ -150,7 +150,7 @@
     if (!state.updates) return;
     const { current_version: version, status } = state.updates;
     const meta = updateStateMeta(status.state);
-    $("#updateCurrentVersion").textContent = `Current Version v${version}`;
+    $("#updateCurrentVersion").textContent = `Current version v${version}`;
     $("#updateMessage").textContent = status.message;
     const badge = $("#updateStateBadge");
     badge.textContent = meta.label;
@@ -264,7 +264,7 @@
       const failedAttempts = health.reduce((sum, backend) => sum + Number(backend.failed_attempts || 0), 0);
       const backendHealthRows = health.map(backend => {
         const stateView = backendHealthView(backend.health, rule.health_check?.enabled);
-        const checked = backend.last_checked_secs_ago == null ? "Not checked yet" : `${formatNumber(backend.last_checked_secs_ago)} Second`;
+        const checked = backend.last_checked_secs_ago == null ? "Not checked yet" : `${formatNumber(backend.last_checked_secs_ago)} s ago`;
         const latency = backend.health_check_latency_ms == null ? "--" : `${formatNumber(backend.health_check_latency_ms)} ms`;
         const streak = backend.health === "unhealthy"
           ? `Consecutive failures: ${formatNumber(backend.consecutive_health_failures)}`
@@ -292,10 +292,10 @@
           <div><span>Real IP forwarding</span><strong>${proxyProtocolLabel(rule.proxy_protocol)}</strong></div>
           <div><span>Active backend connections</span><strong>${formatNumber(activeBackends)}</strong></div>
           <div><span>Failed backend attempts</span><strong>${formatNumber(failedAttempts)}</strong></div>
-          <div><span>Status Response</span><strong>${rule.status ? (rule.status.mode === "backend" ? "Backend status + cache" : "Proxy-generated status") : "Transparent passthrough"}</strong></div>
+          <div><span>Status response</span><strong>${rule.status ? (rule.status.mode === "backend" ? "Backend status + cache" : "Proxy-generated status") : "Transparent passthrough"}</strong></div>
           <div><span>Active health checks</span><strong>${!rule.health_check?.enabled ? "Off" : rule.health_check.mode === "minecraft-status" ? "Minecraft Status" : "TCP Port"}</strong></div>
           <div><span>Access control</span><strong>${rule.whitelist_enabled ? `Whitelist: ${rule.whitelist.length} players` : "Handled by backend"}</strong></div>
-          <div><span>Backend handshake Host</span><strong>${rule.modify_virtual_host ? "Rewrite as backend host" : "Keep client hostname"}</strong></div>
+          <div><span>Backend handshake host</span><strong>${rule.modify_virtual_host ? "Rewrite as backend host" : "Keep client hostname"}</strong></div>
           <div><span>Bedrock crossplay</span><strong>${rule.crossplay_enabled ? "Allowed as crossplay upstream" : "Not allowed"}</strong></div>
         </div>
         <section class="backend-health-list" aria-label="${escapeHtml(rule.name)} Backend health status">
@@ -812,7 +812,7 @@
     if (!runtime.available) return "GeyserLite is unavailable on this platform or build";
     if (runtime.running) {
       const mode = runtime.mode === "subprocess" ? "Subprocess" : "In process";
-      return `Hosting · ${mode}`;
+      return `Running · ${mode}`;
     }
     return runtime.error ? "Start failed" : "Stopped";
   }

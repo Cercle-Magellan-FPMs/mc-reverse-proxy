@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <title>YvLink API Document</title>
+  <title>YvLink API reference</title>
   <style>
     :root{--bg:#080b11;--panel:#101620;--line:#263142;--text:#edf3fa;--muted:#8b98aa;--green:#48d7a4;--blue:#6d8cff;--red:#f1727b}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -25,63 +25,63 @@
 <div class="layout">
   <aside class="side">
     <div class="brand"><span class="mark">API</span><div><h1>YvLink</h1><p>CONTROL INTERFACE</p></div></div>
-    <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Retrieval interface or field"></div>
+    <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Search endpoints and fields"></div>
     <nav id="toc">
-      <a href="#auth">Statement of authentication</a>
-      <a href="#health">Health screening</a>
-      <a href="#session">Authentication check</a>
-      <a href="#status">Run Status</a>
-      <a href="#updates">Automatically update status</a>
-      <a href="#crossplay-get">Read interoperable status</a>
-      <a href="#crossplay-put">Modify Interoper Configuration</a>
-      <a href="#config-get">Read Configuration</a>
-      <a href="#config-put">Modify Configuration</a>
-      <a href="#rules-get">Rule List</a>
-      <a href="#rules-post">New Rule</a>
-      <a href="#rules-put">Modification of rules</a>
-      <a href="#rules-delete">Delete Rule</a>
-      <a href="#errors">Error Code</a>
+      <a href="#auth">Authentication</a>
+      <a href="#health">Health check</a>
+      <a href="#session">Session check</a>
+      <a href="#status">Runtime status</a>
+      <a href="#updates">Automatic updates</a>
+      <a href="#crossplay-get">Crossplay status</a>
+      <a href="#crossplay-put">Update crossplay</a>
+      <a href="#config-get">Read configuration</a>
+      <a href="#config-put">Update configuration</a>
+      <a href="#rules-get">List routes</a>
+      <a href="#rules-post">Create route</a>
+      <a href="#rules-put">Update route</a>
+      <a href="#rules-delete">Delete route</a>
+      <a href="#errors">Error codes</a>
     </nav>
   </aside>
   <main>
     <header class="hero">
-      <h1>Manage API documents</h1>
-      <p>for querying Minecraft Java TCP forwarding status, reading real-time traffic metrics, and managing forwarding rules and global parameters online. The management interface is accessed by default only through the same-origin HTTPS page.</p>
+      <h1>Management API reference</h1>
+      <p>Query Minecraft Java proxy status and traffic metrics, and manage routes and global settings. By default, the management API is exposed through the same-origin HTTPS console.</p>
       <div class="meta"><span class="pill">Base URL: /api/v1</span><span class="pill">JSON</span><span class="pill">Bearer Token</span><span class="pill">v0.15.0</span></div>
     </header>
 
     <section id="auth" data-search="Authentication bearer token authorization management token">
-      <h2>Statement of authentication</h2>
-      <div class="note">Divide <code>/healthz</code> Except, all interfaces must carry <code>Authorization: Bearer &lt;Manage tokens&gt;</code>.Token comes from server-side environment variable <code>MC_PROXY_ADMIN_TOKEN</code>,Minimum 32 characters.</div>
+      <h2>Authentication</h2>
+      <div class="note">Every endpoint except <code>/healthz</code> requires <code>Authorization: Bearer &lt;admin-token&gt;</code>. Set the token with the server-side <code>MC_PROXY_ADMIN_TOKEN</code> environment variable; it must contain at least 32 characters.</div>
       <pre>Authorization: Bearer your-admin-token
 Content-Type: application/json</pre>
     </section>
 
     <section class="endpoint" id="health" data-search="Health Check healthz nginx No certification">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/healthz</span><h3>Health screening</h3></div>
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/healthz</span><h3>Health check</h3></div>
       <div class="endpoint-body">
-        <p>For Nginx, systemd, or the monitoring system to confirm that the management HTTP service is capable of responding. Authentication.</p>
+        <p>Returns a simple response for Nginx, systemd, or monitoring. YvLink does not require a Bearer token for this endpoint.</p>
         <div class="label">Request parameters</div><p>None.</p>
         <div class="label">Successful response</div><pre>HTTP/1.1 200 OK
 ok</pre>
-        <div class="label">Error Code</div><p>502 returned from upstream when service is unavailable or connection failed.</p>
+        <div class="label">Errors</div><p>An upstream proxy may return <code>502</code> when the service is unavailable.</p>
       </div>
     </section>
 
     <section class="endpoint" id="session" data-search="Authentication check session token login">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/session</span><h3>Check management tokens</h3></div>
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/session</span><h3>Check admin token</h3></div>
       <div class="endpoint-body">
         <p>The login page uses this interface to authenticate the token without creating a server-side session.</p>
         <div class="label">Request parameters</div><p>Authorization request header only.</p>
         <div class="label">Successful response</div><pre>{"ok":true,"data":{"authenticated":true}}</pre>
-        <div class="label">Error Code</div><p><code>401</code>:The token is missing or not matching.</p>
+        <div class="label">Errors</div><p><code>401</code>: Missing or invalid token.</p>
       </div>
     </section>
 
     <section class="endpoint" id="status" data-search="status status traffic concurrent upload download metrics failures uptime health check health backend">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/status</span><h3>Read Operation Status</h3></div>
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/status</span><h3>Read runtime status</h3></div>
       <div class="endpoint-body">
-        <p>Returns the instance runtime, aggregate metrics for a single Minecraft listening portal, and the host routing state in order. Upload/download bytes will accumulate in real time after the data is successfully written to the other end.</p>
+        <p>Returns uptime, aggregate metrics, and route state. Upload and download byte counts increase after data is successfully written to the peer.</p>
         <div class="label">Request parameters</div><p>None.</p>
         <div class="label">Successful response</div><pre>{
   "ok": true,
@@ -116,7 +116,7 @@ ok</pre>
     "rules": [
       {
         "id": "play",
-        "name": "Master's suit.",
+         "name": "Survival",
         "host": ["play.example.com", "*.play.example.com"],
         "backend": ["backend-a.example.com:25565", "backend-b.example.com:25565"],
         "strategy": "least-connections",
@@ -135,7 +135,7 @@ ok</pre>
         "status": {
           "mode": "backend",
           "cache_ttl_secs": 60,
-          "motd": "§aWelcome to the master suit.",
+           "motd": "§aWelcome to Survival",
           "version_name": null,
           "protocol": null,
           "online": null,
@@ -161,68 +161,68 @@ ok</pre>
     ]
   }
 }</pre>
-        <div class="label">Model handshake indicator</div>
+        <div class="label">Mod loader handshake counters</div>
         <table>
-          <tr><th>Fields</th><th>Annotations</th></tr>
-          <tr><td><code>unmarked_handshakes</code></td><td>Handshake without the loader Host flag; Original and Fabric initial handshake cannot be reliably distinguished, so merge statistics.</td></tr>
-          <tr><td><code>legacy_forge_handshakes</code></td><td>With Independence <code>FML</code> Marked legacy Forge handshake.</td></tr>
-          <tr><td><code>modern_forge_login_handshakes</code></td><td>And... <code>FML2</code> or <code>FML3</code> Flagged, Forge handshake negotiated at Login stage.</td></tr>
-          <tr><td><code>configuration_forge_handshakes</code></td><td>And... <code>FORGE</code> or NAT version suffix of 1.20.2+ Configuration system handshake; can contain Forge/NeoForge client.</td></tr>
+          <tr><th>Field</th><th>Description</th></tr>
+          <tr><td><code>unmarked_handshakes</code></td><td>Handshakes without a mod loader marker in the host field. Vanilla and Fabric cannot be reliably distinguished here.</td></tr>
+          <tr><td><code>legacy_forge_handshakes</code></td><td>Legacy Forge handshakes marked with <code>FML</code>.</td></tr>
+          <tr><td><code>modern_forge_login_handshakes</code></td><td>Forge handshakes marked with <code>FML2</code> or <code>FML3</code>, negotiated during Login.</td></tr>
+          <tr><td><code>configuration_forge_handshakes</code></td><td>Forge or NeoForge handshakes marked with <code>FORGE</code> or a 1.20.2+ Configuration suffix.</td></tr>
         </table>
-        <p>These counts only recognize the initial Host flag, do not decode the Login, Configuration, Play, or encrypted module load, and are not equivalent to the number of successful logins.</p>
-        <div class="label">Active health field</div>
-        <p><code>health</code> Yes <code>unknown</code>,<code>healthy</code> or <code>unhealthy</code>;<code>last_checked_secs_ago</code> are the number of seconds since the most recently completed probe. The total number of successes/failures of health checks and the number of consecutive successes/failures per backend are used for running monitoring and threshold status judgments, respectively..<code>tcp</code> Success only means port can reach;<code>minecraft-status</code> Successful means that Java Handshake, Status JSON structure check, and Ping/Pong have been completed, but does not mean that the player is able to log in or negotiate the module successfully.</p>
-        <div class="label">Error Code</div><p><code>401</code>:Authentication Failed.</p>
+        <p>These counters inspect only the initial handshake host marker. They do not count successful logins or decode later protocol phases.</p>
+        <div class="label">Backend health fields</div>
+        <p><code>health</code> is <code>unknown</code>, <code>healthy</code>, or <code>unhealthy</code>. <code>last_checked_secs_ago</code> measures time since the last completed probe. Total and consecutive success/failure counters support monitoring and health thresholds. A successful <code>tcp</code> probe confirms only that the port is reachable; a successful <code>minecraft-status</code> probe also validates the Java handshake, Status JSON, and Ping/Pong. Neither guarantees that a player can log in.</p>
+        <div class="label">Errors</div><p><code>401</code>:Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="updates" data-search="Automatic update systemd release Download rollback status">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/updates</span><h3>Read autoupdate status</h3></div>
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/updates</span><h3>Read automatic update status</h3></div>
       <div class="endpoint-body">
-        <p>Read the status file last written by the systemd autoupdator, and will not trigger a download, restart, or upgrade from the management API. This is how the console displays a pop-up when an update downloads, completes, fails, or rolls back.</p>
+        <p>Reads the latest status file written by the systemd updater. This API does not download updates or restart the service. The console uses the result to show completed, failed, and rolled-back updates.</p>
         <div class="label">Request parameters</div><p>None.</p>
-        <div class="label">Successful response</div><pre>{"ok":true,"data":{"current_version":"0.15.0","status":{"state":"up-to-date","message":"It's now. v0.15.0."}}}</pre>
-        <div class="label">Status Field</div>
-        <table><thead><tr><th>Fields</th><th>Annotations</th></tr></thead><tbody>
+        <div class="label">Successful response</div><pre>{"ok":true,"data":{"current_version":"0.15.0","status":{"state":"up-to-date","message":"Already up to date: v0.15.0."}}}</pre>
+        <div class="label">Status fields</div>
+        <table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody>
           <tr><td><code>current_version</code></td><td>Current running version of YvLink.</td></tr>
           <tr><td><code>status.state</code></td><td><code>up-to-date</code>,<code>downloading</code>,<code>updated</code>,<code>deferred</code>,<code>failed</code>,<code>rolled-back</code> or <code>unknown</code>.</td></tr>
-          <tr><td><code>status.message</code></td><td>Last update instructions that can be displayed directly to the administrator.</td></tr>
+          <tr><td><code>status.message</code></td><td>Latest updater message shown to administrators.</td></tr>
         </tbody></table>
-        <div class="label">Error Code</div><p><code>401</code>:Authentication failed. Returns if the updater has not been executed or the status file is unreadable <code>200</code>,And <code>unknown</code> Statement of reasons.</p>
+        <div class="label">Errors</div><p><code>401</code>: Authentication failed. If the updater has not run or its status file is unreadable, the API returns <code>200</code> with <code>status.state="unknown"</code> and an explanatory message.</p>
       </div>
     </section>
 
-    <section class="endpoint" id="via-get" data-search="vialite via Java The protocol version is compatible with the backend sidecar state">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/via</span><h3>Read ViaLite configuration and operation status</h3></div>
+    <section class="endpoint" id="via-get" data-search="vialite via Java protocol backend subprocess status">
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/via</span><h3>Read ViaLite configuration and status</h3></div>
       <div class="endpoint-body">
-        <p>Read the Java backend compatibility configuration and actual subprocess status of the managed ViaLite. ViaLite is located between the routed YvLink and the real backend;<code>running=true</code> Dialing backend connections to loopback translation entries.</p>
+        <p>Returns the managed ViaLite configuration and subprocess status. ViaLite sits between YvLink routing and the real Java backend. When <code>running=true</code>, backend connections use its loopback translation listeners.</p>
         <div class="label">Request parameters</div><p>None.</p>
         <div class="label">Successful response</div><pre>{"ok":true,"data":{"config":{"enabled":true,"binary_path":"/opt/mc-proxy/vialite/vialite","runtime_dir":"/run/mc-proxy/vialite","gate_protocol":"auto","backend_version":"auto"},"runtime":{"available":true,"enabled":true,"running":true,"managed_backends":2,"error":null}}}</pre>
-        <div class="label">Error Code</div><p><code>401</code>:Authentication Failed.</p>
+        <div class="label">Errors</div><p><code>401</code>:Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="via-put" data-search="Modify vialite via Java protocol version compatible backend sidecar">
       <div class="endpoint-head"><span class="method put">PUT</span><span class="path">/api/v1/via</span><h3>Modify ViaLite configuration</h3></div>
       <div class="endpoint-body">
-        <p>The atom saves the ViaLite configuration and reconstructs the isolation subprocess and the loopback entrance for each unique backend. Runtime startup failures do not delete saved configurations;<code>runtime.error</code> The reason will be explained, the agent will keep the real backend connected directly.</p>
+        <p>Atomically saves the ViaLite configuration and rebuilds a separate subprocess and loopback listener for each unique backend. If startup fails, the saved configuration remains and <code>runtime.error</code> reports the cause; connections fall back to the real backend.</p>
         <div class="label">Request Body Parameters</div>
         <table><thead><tr><th>Fields</th><th>Type</th><th>Constraints and description</th></tr></thead><tbody>
           <tr><td><code>enabled</code></td><td>Boolean</td><td>Whether to enable ViaLite backend Java protocol conversion.</td></tr>
-          <tr><td><code>binary_path</code></td><td>String/null</td><td>Must be absolute path when enabled; validated by deployment script <code>vialite</code> Native Executable.</td></tr>
-          <tr><td><code>runtime_dir</code></td><td>String</td><td>Temporary native JSON configuration directory, production systemd default <code>/run/mc-proxy/vialite</code>.</td></tr>
-          <tr><td><code>gate_protocol</code></td><td>String</td><td>YvLink Protocol to ViaLite, usually <code>auto</code>.</td></tr>
-          <tr><td><code>backend_version</code></td><td>String</td><td>ViaLite Protocol to Backend;<code>auto</code> Usage Detection, back-end masking Status should be explicitly specified.</td></tr>
+          <tr><td><code>binary_path</code></td><td>String/null</td><td>Absolute path to the native ViaLite executable when enabled.</td></tr>
+          <tr><td><code>runtime_dir</code></td><td>String</td><td>Directory for temporary JSON configuration; the production systemd default is <code>/run/mc-proxy/vialite</code>.</td></tr>
+          <tr><td><code>gate_protocol</code></td><td>String</td><td>Protocol used from YvLink to ViaLite, usually <code>auto</code>.</td></tr>
+          <tr><td><code>backend_version</code></td><td>String</td><td>Protocol used from ViaLite to the backend. <code>auto</code> detects the backend version; set it explicitly if detection is unsuitable.</td></tr>
         </tbody></table>
         <div class="label">Example request</div><pre>{"enabled":true,"binary_path":"/opt/mc-proxy/vialite/vialite","runtime_dir":"/run/mc-proxy/vialite","gate_protocol":"auto","backend_version":"auto"}</pre>
-        <div class="label">Error Code</div><p><code>400</code>:The path is not an absolute path, the protocol identity is illegal, or there is an enabled <code>proxy_protocol</code> Route.<code>401</code>:Authentication Failed.</p>
+        <div class="label">Errors</div><p><code>400</code>: Invalid path or protocol, or a route has PROXY Protocol enabled. <code>401</code>: Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="crossplay-get" data-search="Bedrock crossplay geyser bedrock udp raknet status">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/crossplay</span><h3>Read bedrock interoperability configuration and status</h3></div>
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/crossplay</span><h3>Read Bedrock crossplay status</h3></div>
       <div class="endpoint-body">
-        <p>Returns the expected configuration and managed operation status of the Geyser interworking, and sends the real to the Bedrock UDP portal when enabled RakNet Unconnected Ping.<code>online=true</code> Indicates the actual response of the translator; the interface does not incorrectly report normal UDP reachability as Geyser online.<code>runtime</code> Describe provider as not listening on all backend loopback ports for <code>geyserlite</code> The translation layer hosted by the mc-proxy to fail:<code>available</code> Managed parameters when the build enables the GeyserLite feature,<code>running</code> Indicates whether the hosting example survives,<code>error</code> Record startup or exit failure.</p>
+        <p>Returns crossplay configuration and Geyser runtime status. When enabled, YvLink sends a RakNet Unconnected Ping to the Bedrock UDP port. <code>online=true</code> means the translator replied. For hosted GeyserLite, <code>runtime.available</code> indicates build support, <code>runtime.running</code> indicates whether it is active, and <code>runtime.error</code> records startup or exit failures.</p>
         <div class="label">Request parameters</div><p>None.</p>
         <div class="label">Successful response</div><pre>{
   "ok": true,
@@ -263,43 +263,43 @@ ok</pre>
     }
   }
 }</pre>
-        <div class="label">Error Code</div><p><code>401</code>:Authentication failed. Geyser still returns offline <code>200</code>,and adopted <code>online=false</code> and <code>error</code> Description of detection results.</p>
+        <div class="label">Errors</div><p><code>401</code>: Authentication failed. When Geyser is offline, the endpoint still returns <code>200</code> with <code>online=false</code> and an error description.</p>
       </div>
     </section>
 
     <section class="endpoint" id="crossplay-put" data-search="Alter the base rock. crossplay put geyser floodgate online offline">
-      <div class="endpoint-head"><span class="method put">PUT</span><span class="path">/api/v1/crossplay</span><h3>Modifying Basestone Interconnection Configuration</h3></div>
+      <div class="endpoint-head"><span class="method put">PUT</span><span class="path">/api/v1/crossplay</span><h3>Update Bedrock crossplay</h3></div>
       <div class="endpoint-body">
-        <p>Verify and atomically persist the interworking configuration, and then immediately perform a RakNet health probe. provider is <code>external</code> When Geyser is an independent translator, the same monitoring and Java target parameters must be used separately; the provider is <code>geyserlite</code> When mc-proxy directly hosts the startup of GeyserLite, the startup failure will be recorded in <code>runtime.error</code> without rolling back the saved configuration. When the corresponding build feature is not enabled(<code>available=false</code>),geyserlite Mode does not start translation level.</p>
+        <p>Validates and atomically saves crossplay settings, then immediately runs a RakNet health probe. <code>external</code> uses a separate Geyser Standalone process; <code>geyserlite</code> starts a translator managed by YvLink. A startup failure is reported in <code>runtime.error</code> without reverting the saved configuration. GeyserLite requires a build with <code>available=true</code>.</p>
         <div class="label">Request Body Parameters</div>
         <table><thead><tr><th>Fields</th><th>Type</th><th>Constraints and description</th></tr></thead><tbody>
-          <tr><td><code>enabled</code></td><td>Boolean</td><td>Whether interoperability health monitoring is enabled.</td></tr>
-          <tr><td><code>provider</code></td><td>Enumeration</td><td><code>external</code>(Geyser Standalone independence process) or <code>geyserlite</code>(Hosted by proxy).</td></tr>
-          <tr><td><code>bedrock_listen</code></td><td>SocketAddr</td><td>Expected Geyser Bedrock UDP listening address, the port must not be 0.</td></tr>
-          <tr><td><code>java_address</code></td><td>String</td><td>Geyser The connected Java host must be matched when interworking is enabled <code>crossplay_enabled=true</code> mc-proxy Host route and resolves internally to native.</td></tr>
-          <tr><td><code>java_port</code></td><td>Integer</td><td>1 To 65535, usually mc-proxy Java entry ports.</td></tr>
-          <tr><td><code>auth_type</code></td><td>Enumeration</td><td><code>online</code>,<code>floodgate</code> or <code>offline</code>.Offline is not recommended for public networks; Floodgate requires controllable back-end supporting installation.</td></tr>
-          <tr><td><code>geyserlite</code></td><td>Object</td><td>provider Yes <code>geyserlite</code> time of hosting parameters, see the following table for the fields.</td></tr>
+          <tr><td><code>enabled</code></td><td>Boolean</td><td>Enable crossplay health monitoring.</td></tr>
+          <tr><td><code>provider</code></td><td>Enum</td><td><code>external</code> for a separate Geyser Standalone process, or <code>geyserlite</code> for the hosted translator.</td></tr>
+          <tr><td><code>bedrock_listen</code></td><td>SocketAddr</td><td>Expected Geyser Bedrock UDP listen address; port must be nonzero.</td></tr>
+          <tr><td><code>java_address</code></td><td>String</td><td>Hostname used by Geyser for Java. It must match an enabled route with <code>crossplay_enabled=true</code> and resolve locally to YvLink.</td></tr>
+          <tr><td><code>java_port</code></td><td>Integer</td><td>1–65535; usually the YvLink Java listen port.</td></tr>
+          <tr><td><code>auth_type</code></td><td>Enum</td><td><code>online</code>, <code>floodgate</code>, or <code>offline</code>. Floodgate requires compatible backend setup.</td></tr>
+          <tr><td><code>geyserlite</code></td><td>Object</td><td>Managed translator settings used when provider is <code>geyserlite</code>.</td></tr>
         </tbody></table>
         <div class="label">geyserlite Parameters</div>
         <table><thead><tr><th>Fields</th><th>Type</th><th>Constraints and description</th></tr></thead><tbody>
-          <tr><td><code>mode</code></td><td>Enumeration</td><td><code>embedded</code>(In-process load, default) or <code>subprocess</code>(Host subprocesses).</td></tr>
-          <tr><td><code>library_path</code></td><td>String/null</td><td>Only embedded: libgeyserlite.so explicit path; mutually exclusive with binary_path.</td></tr>
-          <tr><td><code>binary_path</code></td><td>String/null</td><td>subprocess only: native executable path; mutually exclusive with library_path.</td></tr>
-          <tr><td><code>offline</code></td><td>Boolean</td><td>Automatic downloading is prohibited; the native library must be provided through the path, GEYSERLITE_library environment variable, or embedded properties.</td></tr>
-          <tr><td><code>motd_line1</code>/<code>motd_line2</code></td><td>String</td><td>Bedrock Server list motd two-line text.</td></tr>
-          <tr><td><code>floodgate_key</code></td><td>String/null</td><td>Only auth_type=floodgate:16 Byte AES-128 key, sensitive.</td></tr>
+          <tr><td><code>mode</code></td><td>Enum</td><td><code>embedded</code> (in process, default) or <code>subprocess</code> (isolated process).</td></tr>
+          <tr><td><code>library_path</code></td><td>String/null</td><td>Explicit <code>libgeyserlite.so</code> path for embedded mode; mutually exclusive with <code>binary_path</code>.</td></tr>
+          <tr><td><code>binary_path</code></td><td>String/null</td><td>Native executable path for subprocess mode; mutually exclusive with <code>library_path</code>.</td></tr>
+          <tr><td><code>offline</code></td><td>Boolean</td><td>Disallow automatic downloads; a local library or executable must be available.</td></tr>
+          <tr><td><code>motd_line1</code>/<code>motd_line2</code></td><td>String</td><td>Two lines of the Bedrock server list MOTD.</td></tr>
+          <tr><td><code>floodgate_key</code></td><td>String/null</td><td>For Floodgate authentication: a sensitive 16-byte AES-128 key.</td></tr>
         </tbody></table>
         <div class="label">Example request</div><pre>{"enabled":true,"provider":"geyserlite","bedrock_listen":"0.0.0.0:19132","java_address":"bedrock.example.com","java_port":25565,"auth_type":"online","geyserlite":{"mode":"embedded","library_path":null,"binary_path":null,"offline":false,"motd_line1":"YvLink","motd_line2":"Bedrock via GeyserLite","floodgate_key":null}}</pre>
-        <div class="label">Successful response</div><p><code>200</code>,The same structure as the reading interface.</p>
-        <div class="label">Error Code</div><p><code>400</code>:Address, port, mode and path conflicts, Floodgate keys are illegal, Java addresses are not matched Routes or configurations that allow interworking cannot be persisted.<code>401</code>:Authentication failure. GeyserLite Startup Failure Still Returns <code>200</code>,It's not working. <code>runtime.error</code>.</p>
+        <div class="label">Successful response</div><p><code>200</code>: Same structure as the GET response.</p>
+        <div class="label">Errors</div><p><code>400</code>: Invalid address, port, mode, paths, Floodgate key, Java route, or persistence failure. <code>401</code>: Authentication failed. GeyserLite startup failure returns <code>200</code> with details in <code>runtime.error</code>.</p>
       </div>
     </section>
 
     <section class="endpoint" id="config-get" data-search="Read Configuration config settings rules admin">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/config</span><h3>Read Full Configuration</h3></div>
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/config</span><h3>Read configuration</h3></div>
       <div class="endpoint-body">
-        <p>Returns the list of management listening addresses, global forwarding parameters, and rules. The response does not contain an administrative token.</p>
+        <p>Returns global settings and all routes. The admin token is excluded.</p>
         <div class="label">Request parameters</div><p>None.</p>
         <div class="label">Successful response</div><pre>{
   "ok": true,
@@ -324,108 +324,108 @@ ok</pre>
     "rules": []
   }
 }</pre>
-        <div class="label">Error Code</div><p><code>401</code>:Authentication Failed.</p>
+        <div class="label">Errors</div><p><code>401</code>:Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="config-put" data-search="Modify Configuration config put timeout buffer nodelay reuseport">
-      <div class="endpoint-head"><span class="method put">PUT</span><span class="path">/api/v1/config</span><h3>Modify global parameters</h3></div>
+      <div class="endpoint-head"><span class="method put">PUT</span><span class="path">/api/v1/config</span><h3>Update global settings</h3></div>
       <div class="endpoint-body">
-        <p>Replace the global entry and forwarding parameters, restart the unique Minecraft listener and atomically write the TOML after the verification passes. Existing connections end gracefully within the grace period.</p>
+        <p>Validates and atomically saves global forwarding settings, then restarts the shared Minecraft listener. Existing connections close within the configured grace period.</p>
         <div class="label">Request Body Parameters</div>
         <table><thead><tr><th>Fields</th><th>Type</th><th>Constraints and description</th></tr></thead><tbody>
-          <tr><td><code>listen</code></td><td>SocketAddr</td><td>Minecraft Java listening address common to all host routes.</td></tr>
-          <tr><td><code>proxy_enabled</code></td><td>Boolean</td><td>Whether to listen for Minecraft entries.</td></tr>
-          <tr><td><code>max_connections</code></td><td>Integer</td><td>Entry global maximum concurrency, 1 to 1000000.</td></tr>
-          <tr><td><code>connect_timeout_ms</code></td><td>Integer</td><td>Greater than 0, back-end connection timeout.</td></tr>
-          <tr><td><code>handshake_timeout_ms</code></td><td>Integer</td><td>Greater than 0, timeout for reading Minecraft handshake domain name.</td></tr>
-          <tr><td><code>shutdown_grace_secs</code></td><td>Integer</td><td>1 Present. 300.</td></tr>
-          <tr><td><code>copy_buffer_bytes</code></td><td>Integer</td><td>4096 Present. 1048576.</td></tr>
-          <tr><td><code>socket_buffer_bytes</code></td><td>Integer</td><td>0 to 16777216; 0 Use system default.</td></tr>
-          <tr><td><code>listen_backlog</code></td><td>Integer</td><td>1 Present. 65535.</td></tr>
+          <tr><td><code>listen</code></td><td>SocketAddr</td><td>Java listen address shared by all routes.</td></tr>
+          <tr><td><code>proxy_enabled</code></td><td>Boolean</td><td>Whether the Minecraft listener is enabled.</td></tr>
+          <tr><td><code>max_connections</code></td><td>Integer</td><td>Global concurrent connection limit, 1–1,000,000.</td></tr>
+          <tr><td><code>connect_timeout_ms</code></td><td>Integer</td><td>Backend connection timeout; greater than zero.</td></tr>
+          <tr><td><code>handshake_timeout_ms</code></td><td>Integer</td><td>Timeout for reading the Minecraft handshake; greater than zero.</td></tr>
+          <tr><td><code>shutdown_grace_secs</code></td><td>Integer</td><td>1–300 seconds.</td></tr>
+          <tr><td><code>copy_buffer_bytes</code></td><td>Integer</td><td>4,096–1,048,576 bytes.</td></tr>
+          <tr><td><code>socket_buffer_bytes</code></td><td>Integer</td><td>0–16,777,216 bytes; zero uses the system default.</td></tr>
+          <tr><td><code>listen_backlog</code></td><td>Integer</td><td>1–65,535.</td></tr>
           <tr><td><code>tcp_nodelay</code></td><td>Boolean</td><td>Enable TCP_NODELAY.</td></tr>
-          <tr><td><code>reuse_port</code></td><td>Boolean</td><td>Linux Used when multiple instances share a port.</td></tr>
-          <tr><td><code>stats_interval_secs</code></td><td>Integer</td><td>Greater than 0.</td></tr>
+          <tr><td><code>reuse_port</code></td><td>Boolean</td><td>Allow multiple listeners to share a port on supported systems.</td></tr>
+          <tr><td><code>stats_interval_secs</code></td><td>Integer</td><td>Metrics logging interval; greater than zero.</td></tr>
         </tbody></table>
         <div class="label">Example request</div><pre>{"listen":"0.0.0.0:25565","proxy_enabled":true,"max_connections":10000,"connect_timeout_ms":5000,"handshake_timeout_ms":5000,"shutdown_grace_secs":30,"copy_buffer_bytes":32768,"socket_buffer_bytes":1048576,"listen_backlog":4096,"tcp_nodelay":true,"reuse_port":false,"stats_interval_secs":10}</pre>
-        <div class="label">Successful response</div><p><code>200</code>,data To complete updated configuration.</p>
-        <div class="label">Error Code</div><p><code>400</code>:Illegal parameter, port binding failed or configuration could not be persisted.<code>401</code>:Authentication Failed.</p>
+        <div class="label">Successful response</div><p><code>200</code>: Updated configuration.</p>
+        <div class="label">Errors</div><p><code>400</code>: Invalid settings, listener failure, or persistence failure. <code>401</code>: Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="rules-get" data-search="Rule list rules get domain name routing domains smart triage">
-      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/rules</span><h3>Read Rule List</h3></div>
+      <div class="endpoint-head"><span class="method">GET</span><span class="path">/api/v1/rules</span><h3>List routes</h3></div>
       <div class="endpoint-body">
-        <p>Return to Enduring All host → backend Route. All rules are shared. <code>settings.listen</code>,The array order is the matching order..</p>
+        <p>Returns all persisted host-to-backend routes in matching order. Every route shares <code>settings.listen</code>.</p>
         <div class="label">Request parameters</div><p>None.</p>
-        <div class="label">Successful response</div><pre>{"ok":true,"data":[{"id":"play","name":"Master's suit.","host":["play.example.com"],"backend":["backend-a.example.com:25565","backend-b.example.com:25565"],"strategy":"round-robin","proxy_protocol":"off","health_check":{"enabled":true,"mode":"minecraft-status","interval_secs":30,"timeout_ms":2000,"unhealthy_threshold":3,"healthy_threshold":2,"minecraft_host":"play.example.com","minecraft_protocol":769},"modify_virtual_host":false,"status":{"mode":"backend","cache_ttl_secs":60,"motd":"§aWelcome to the master suit.","version_name":null,"protocol":null,"online":null,"max":null,"fallback":null},"whitelist_enabled":true,"whitelist":["Alice","Bob"],"whitelist_message":"§cYou are not in the whitelist of this server.","crossplay_enabled":true,"enabled":true}]}</pre>
-        <div class="label">Error Code</div><p><code>401</code>:Authentication Failed.</p>
+        <div class="label">Successful response</div><pre>{"ok":true,"data":[{"id":"play","name":"Survival","host":["play.example.com"],"backend":["backend-a.example.com:25565","backend-b.example.com:25565"],"strategy":"round-robin","proxy_protocol":"off","health_check":{"enabled":true,"mode":"minecraft-status","interval_secs":30,"timeout_ms":2000,"unhealthy_threshold":3,"healthy_threshold":2,"minecraft_host":"play.example.com","minecraft_protocol":769},"modify_virtual_host":false,"status":{"mode":"backend","cache_ttl_secs":60,"motd":"§aWelcome to Survival","version_name":null,"protocol":null,"online":null,"max":null,"fallback":null},"whitelist_enabled":true,"whitelist":["Alice","Bob"],"whitelist_message":"§cYou are not in the whitelist of this server.","crossplay_enabled":true,"enabled":true}]}</pre>
+        <div class="label">Errors</div><p><code>401</code>:Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="rules-post" data-search="New rule rules post host backend domain name wildcard single port health check health threshold tcp minecraft status ping pong">
-      <div class="endpoint-head"><span class="method post">POST</span><span class="path">/api/v1/rules</span><h3>New Forward Rule</h3></div>
+      <div class="endpoint-head"><span class="method post">POST</span><span class="path">/api/v1/rules</span><h3>Create route</h3></div>
       <div class="endpoint-body">
-        <p>Add a new Article host → backend Routing and Atomic Persistence. The agent reads the first Minecraft Java handshake and uses the first match in the rule array order; the new rule automatically inserts the enabled <code>*</code> Before the rules go down..</p>
+        <p>Creates and atomically saves a host-to-backend route. YvLink uses the first route whose host pattern matches the initial Java handshake. A new route is inserted before an enabled catch-all <code>*</code> route.</p>
         <div class="label">Request Body Parameters</div>
         <table><thead><tr><th>Fields</th><th>Type</th><th>Constraints and description</th></tr></thead><tbody>
-          <tr><td><code>id</code></td><td>String</td><td>1 To 32-bit letters, numbers, dashes or underscores, must be unique.</td></tr>
-          <tr><td><code>name</code></td><td>String</td><td>1 To 64 Characters.</td></tr>
-          <tr><td><code>host</code></td><td>String array</td><td>One or more handshake domains; support <code>*</code>,<code>?</code> Wildcard, case insensitive. JSON uses arrays.</td></tr>
-          <tr><td><code>backend</code></td><td>String array</td><td>1 128 <code>Host: Port</code>;TOML Compatible with legacy single string, JSON API returns and receives array.</td></tr>
+          <tr><td><code>id</code></td><td>String</td><td>Unique identifier: 1–32 letters, digits, hyphens, or underscores.</td></tr>
+          <tr><td><code>name</code></td><td>String</td><td>1–64 characters.</td></tr>
+          <tr><td><code>host</code></td><td>String array</td><td>One or more handshake host patterns. <code>*</code> and <code>?</code> wildcards are supported; matching is case insensitive.</td></tr>
+          <tr><td><code>backend</code></td><td>String array</td><td>1–128 <code>host:port</code> addresses. TOML also accepts a legacy single string; the JSON API uses an array.</td></tr>
           <tr><td><code>strategy</code></td><td>Enumeration</td><td><code>sequential</code>,<code>random</code>,<code>round-robin</code>,<code>least-connections</code> or <code>lowest-latency</code>.</td></tr>
-          <tr><td><code>proxy_protocol</code></td><td>Enumeration</td><td><code>off</code>,<code>v1</code> or <code>v2</code>,Default <code>off</code>.When enabled, the connection header is sent before the Minecraft data; the backend must explicitly support the same version, and the backend port should only trust the proxy source. TOML compliant Gate style boolean:<code>true</code> Equivalent v1.</td></tr>
-          <tr><td><code>health_check</code></td><td>Object</td><td>Active health screening.<code>mode</code> Yes <code>tcp</code> or <code>minecraft-status</code>;The latter completes Java Handshake, Status JSON, and Ping/Pong checksums. Also included <code>enabled</code>,1–86400 Seconds <code>interval_secs</code>,100–60000 Whole times in milliseconds and not greater than the interval <code>timeout_ms</code>,and 1–100 Yes. <code>unhealthy_threshold</code>/<code>healthy_threshold</code>.Default off; Global concurrency up to 64.</td></tr>
-          <tr><td><code>health_check.minecraft_host</code></td><td>String or null</td><td>Status Sound handshake. Host,1–255 bytes, and cannot contain wildcards, whitespaces, or NULs. Prefer precise routing Host when null; use the current backend hostname when wildcard routing or Host override is enabled.</td></tr>
-          <tr><td><code>health_check.minecraft_protocol</code></td><td>Integer</td><td>Status Probe handshake protocol number, range 0 to 2147483647, default 769. The probe will accept the version returned by the server does not match the status, but requires that the response contain a base <code>version</code>,<code>players</code> with <code>description</code>.</td></tr>
-          <tr><td><code>modify_virtual_host</code></td><td>Boolean</td><td>Whether to change the Minecraft handshake host forwarded to the backend to the hostname of the backend; the backend requires a fixed domain name to be enabled.</td></tr>
-          <tr><td><code>crossplay_enabled</code></td><td>Boolean</td><td>whether to allow the route as the upstream of Java of the global Bedrock Crossplay, by default <code>false</code>.When global interoperating,<code>crossplay.java_address</code> Must match an enabled string and the field is <code>true</code> Rules.</td></tr>
-          <tr><td><code>status</code></td><td>Object or null</td><td>Responses by proxy management server list when present.<code>mode</code> Yes <code>custom</code> from which the response is fully generated; <code>backend</code> Read backend JSON and keep <code>forgeData</code>,<code>modinfo</code>,favicon,Player sample and other unknown fields.</td></tr>
-          <tr><td><code>status.cache_ttl_secs</code></td><td>Integer</td><td>-1 To 86400; backend mode press backend and client protocol number cache, -1 or 0 non-reusable cache.</td></tr>
-          <tr><td><code>status.motd</code> Waiting to overwrite fields</td><td>Empty</td><td><code>motd</code>,<code>version_name</code>,<code>protocol</code>,<code>online</code>,<code>max</code>.Only non-null fields in the backend mode will overwrite the backend original value.</td></tr>
-          <tr><td><code>status.fallback</code></td><td>Object or null</td><td>backend mode; return to offline state when connection, timeout, or JSON parsing fails. The field is the same as the override field above.</td></tr>
-          <tr><td><code>whitelist_enabled</code></td><td>Boolean</td><td>Whether to execute proxy whitelist at Login Start stage.</td></tr>
-          <tr><td><code>whitelist</code></td><td>String array</td><td>Up to 10,000 player names, case insensitive; player names are 1 to 16 letters, numbers or underscores.</td></tr>
-          <tr><td><code>whitelist_message</code></td><td>String</td><td>Login Disconnect text component received by non-whitelisted players or § Format message, 1 to 1024 characters.</td></tr>
-          <tr><td><code>enabled</code></td><td>Boolean</td><td>Whether to include the routing table of the current entry.</td></tr>
+          <tr><td><code>proxy_protocol</code></td><td>Enum</td><td><code>off</code>, <code>v1</code>, or <code>v2</code> (default: <code>off</code>). The backend must support the selected version. In TOML, legacy <code>true</code> means v1.</td></tr>
+          <tr><td><code>health_check</code></td><td>Object</td><td>Optional active probes. <code>mode</code> is <code>tcp</code> or <code>minecraft-status</code>. Configure <code>enabled</code>, <code>interval_secs</code> (1–86400), <code>timeout_ms</code> (100–60000 and no longer than the interval), and healthy/unhealthy thresholds (1–100). At most 64 probes run concurrently.</td></tr>
+          <tr><td><code>health_check.minecraft_host</code></td><td>String/null</td><td>Handshake host for Status probes, 1–255 bytes, without wildcards, whitespace, or NUL. If omitted, an exact route host is preferred; wildcard routes or host rewriting use the backend hostname.</td></tr>
+          <tr><td><code>health_check.minecraft_protocol</code></td><td>Integer</td><td>Status probe protocol number, 0–2,147,483,647 (default: 769). The returned version may differ, but the response must include <code>version</code>, <code>players</code>, and <code>description</code>.</td></tr>
+          <tr><td><code>modify_virtual_host</code></td><td>Boolean</td><td>Rewrite the forwarded Minecraft handshake host to the backend hostname.</td></tr>
+          <tr><td><code>crossplay_enabled</code></td><td>Boolean</td><td>Allow this route as the Java upstream for global Bedrock crossplay (default: false). <code>crossplay.java_address</code> must match an enabled allowed route.</td></tr>
+          <tr><td><code>status</code></td><td>Object/null</td><td>Optional server list response. <code>custom</code> generates it locally; <code>backend</code> reads backend Status JSON and preserves Forge metadata, favicon, player samples, and unknown fields.</td></tr>
+          <tr><td><code>status.cache_ttl_secs</code></td><td>Integer</td><td>-1–86400. In backend mode, responses are cached by backend and client protocol; -1 or 0 disables reuse.</td></tr>
+          <tr><td>Status override fields</td><td>Optional</td><td><code>motd</code>, <code>version_name</code>, <code>protocol</code>, <code>online</code>, and <code>max</code>. In backend mode, only non-null values override the backend response.</td></tr>
+          <tr><td><code>status.fallback</code></td><td>Object/null</td><td>Fallback response when backend connection, timeout, or JSON parsing fails; uses the same fields as status overrides.</td></tr>
+          <tr><td><code>whitelist_enabled</code></td><td>Boolean</td><td>Check player names against the proxy whitelist during Login Start.</td></tr>
+          <tr><td><code>whitelist</code></td><td>String array</td><td>Up to 10,000 case-insensitive names of 1–16 letters, digits, or underscores.</td></tr>
+          <tr><td><code>whitelist_message</code></td><td>String</td><td>Disconnect message for players outside the whitelist; 1–1024 characters, plain text, § codes, or a JSON text component.</td></tr>
+          <tr><td><code>enabled</code></td><td>Boolean</td><td>Whether this route participates in matching.</td></tr>
         </tbody></table>
-        <div class="label">Example request</div><pre>{"id":"mod","name":"Moose suit.","host":["mod.example.com"],"backend":["backend-a.example.com:25565","backend-b.example.com:25565"],"strategy":"least-connections","proxy_protocol":"v2","health_check":{"enabled":true,"mode":"minecraft-status","interval_secs":30,"timeout_ms":2000,"unhealthy_threshold":3,"healthy_threshold":2,"minecraft_host":"mod.example.com","minecraft_protocol":769},"modify_virtual_host":true,"status":{"mode":"backend","cache_ttl_secs":60,"motd":"§bModel suit online","version_name":null,"protocol":null,"online":null,"max":null,"fallback":{"motd":"§cBackend temporarily offline","version_name":"Maintenance","protocol":-1,"online":0,"max":100}},"whitelist_enabled":false,"whitelist":[],"whitelist_message":"§cYou are not in the whitelist of this server.","crossplay_enabled":true,"enabled":true}</pre>
-        <div class="label">Successful response</div><p><code>201</code>,data For created rules.</p>
-        <div class="label">Error Code</div><p><code>400</code>:ID/host Duplicate, illegal parameters, failed portal reload or failed persistence.<code>401</code>:Authentication Failed.</p>
+        <div class="label">Example request</div><pre>{"id":"mod","name":"Modded","host":["mod.example.com"],"backend":["backend-a.example.com:25565","backend-b.example.com:25565"],"strategy":"least-connections","proxy_protocol":"v2","health_check":{"enabled":true,"mode":"minecraft-status","interval_secs":30,"timeout_ms":2000,"unhealthy_threshold":3,"healthy_threshold":2,"minecraft_host":"mod.example.com","minecraft_protocol":769},"modify_virtual_host":true,"status":{"mode":"backend","cache_ttl_secs":60,"motd":"§bModded server online","version_name":null,"protocol":null,"online":null,"max":null,"fallback":{"motd":"§cBackend temporarily offline","version_name":"Maintenance","protocol":-1,"online":0,"max":100}},"whitelist_enabled":false,"whitelist":[],"whitelist_message":"§cYou are not in the whitelist of this server.","crossplay_enabled":true,"enabled":true}</pre>
+        <div class="label">Successful response</div><p><code>201</code>: Created route.</p>
+        <div class="label">Errors</div><p><code>400</code>: Duplicate ID/host, invalid settings, listener reload failure, or persistence failure. <code>401</code>: Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="rules-put" data-search="Modify rules put id to enable and disable domain name routing">
-      <div class="endpoint-head"><span class="method put">PUT</span><span class="path">/api/v1/rules/{id}</span><h3>Modify or suspend rules</h3></div>
+      <div class="endpoint-head"><span class="method put">PUT</span><span class="path">/api/v1/rules/{id}</span><h3>Update route</h3></div>
       <div class="endpoint-body">
-        <p>Completely replaces the specified host route. The path ID is the authoritative value, and the ID in the request body will be overwritten by the path value. Modifying the host, backend, health check, proxy Protocol, motd, whitelist, handshake Host override, Crossplay allow state or enable state will overload the single entry routing table. When Global Crossplay is enabled, it is not possible for its current Java address to lose matching allowed routes.</p>
-        <div class="label">Path Parameters</div><table><tbody><tr><td><code>id</code></td><td>Rule One ID.</td></tr></tbody></table>
-        <div class="label">Request</div><p>Same as New Rule.</p>
-        <div class="label">Successful response</div><p><code>200</code>,data For updated rules.</p>
-        <div class="label">Error Code</div><p><code>400</code>:Rule Does Not Exist, Parameter Is Illegal, Port Binding Failure or Persistence Failure.<code>401</code>:Authentication Failed.</p>
+        <p>Replaces a route. The path ID overrides any ID in the request body. Route changes reload the shared listener. While crossplay is enabled, its Java address must continue to match an enabled route that allows crossplay.</p>
+        <div class="label">Path parameters</div><table><tbody><tr><td><code>id</code></td><td>Route ID.</td></tr></tbody></table>
+        <div class="label">Request</div><p>Same fields as Create route.</p>
+        <div class="label">Successful response</div><p><code>200</code>: Updated route.</p>
+        <div class="label">Errors</div><p><code>400</code>: Route not found, invalid settings, listener failure, or persistence failure. <code>401</code>: Authentication failed.</p>
       </div>
     </section>
 
     <section class="endpoint" id="rules-delete" data-search="Delete Rule delete">
-      <div class="endpoint-head"><span class="method delete">DELETE</span><span class="path">/api/v1/rules/{id}</span><h3>Delete Forward Rule</h3></div>
+      <div class="endpoint-head"><span class="method delete">DELETE</span><span class="path">/api/v1/rules/{id}</span><h3>Delete route</h3></div>
       <div class="endpoint-body">
-        <p>Elegantly stop and delete the specified rule. To avoid an empty configuration, the system must keep at least one rule; a deactivation rule can be kept.</p>
-        <div class="label">Path Parameters</div><table><tbody><tr><td><code>id</code></td><td>Rule One ID.</td></tr></tbody></table>
+        <p>Stops and removes a route. At least one route must remain in the configuration; it may be disabled.</p>
+        <div class="label">Path parameters</div><table><tbody><tr><td><code>id</code></td><td>Route ID.</td></tr></tbody></table>
         <div class="label">Successful response</div><pre>{"ok":true,"data":{"deleted":"backup"}}</pre>
-        <div class="label">Error Code</div><p><code>400</code>:No rules after the rule does not exist or is deleted.<code>401</code>:Authentication Failed.</p>
+        <div class="label">Errors</div><p><code>400</code>: Route not found or deletion would leave no routes. <code>401</code>: Authentication failed.</p>
       </div>
     </section>
 
-    <section id="errors" data-search="Error Code 400 401 404 500">
-      <h2>Unified error structure</h2>
-      <pre>{"ok":false,"error":{"code":400,"message":"Specific error statement"}}</pre>
+    <section id="errors" data-search="Errors 400 401 404 500">
+      <h2>Error response format</h2>
+      <pre>{"ok":false,"error":{"code":400,"message":"Specific error message"}}</pre>
       <table><thead><tr><th>Status Code</th><th>Meaning</th></tr></thead><tbody>
-        <tr><td><code>400</code></td><td>business parameters or runtime application failure.</td></tr>
-        <tr><td><code>401</code></td><td>Bearer Manage tokens invalid or missing.</td></tr>
-        <tr><td><code>404</code></td><td>Request path does not exist.</td></tr>
-        <tr><td><code>413</code></td><td>Request body exceeds the Axum default limit.</td></tr>
-        <tr><td><code>500</code></td><td>Unexpected service-end error.</td></tr>
-        <tr><td><code>502</code></td><td>Nginx Unable to connect back to ring management.</td></tr>
+        <tr><td><code>400</code></td><td>Invalid request or failure to apply settings.</td></tr>
+        <tr><td><code>401</code></td><td>Missing or invalid admin token.</td></tr>
+        <tr><td><code>404</code></td><td>Unknown path.</td></tr>
+        <tr><td><code>413</code></td><td>Request body exceeds the configured limit.</td></tr>
+        <tr><td><code>500</code></td><td>Unexpected server error.</td></tr>
+        <tr><td><code>502</code></td><td>Upstream reverse proxy cannot reach the management service.</td></tr>
       </tbody></table>
     </section>
   </main>

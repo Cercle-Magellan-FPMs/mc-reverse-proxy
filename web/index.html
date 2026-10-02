@@ -13,7 +13,7 @@
   <a class="skip-link" href="#mainContent">Skip to main content</a>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <a class="brand" href="/" aria-label="YvLink Control Home Page">
+      <a class="brand" href="/" aria-label="YvLink home">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <span class="brand-copy"><strong>YvLink</strong><small>Edge control plane</small></span>
       </a>
@@ -163,7 +163,7 @@
             <span class="settings-hint">Only initial handshake markers are inspected; later mod traffic is not parsed.</span>
           </div>
           <div class="protocol-grid">
-            <div><span>Vanilla / Fabric</span><strong id="protocolUnmarked">0</strong><small>No Loader Tag</small></div>
+            <div><span>Vanilla / Fabric</span><strong id="protocolUnmarked">0</strong><small>No loader marker</small></div>
             <div><span>Legacy Forge</span><strong id="protocolLegacyForge">0</strong><small>FML · 1.8–1.12.2</small></div>
             <div><span>Modern Forge Login</span><strong id="protocolModernForgeLogin">0</strong><small>FML2 / FML3</small></div>
             <div><span>Forge configuration</span><strong id="protocolConfigurationForge">0</strong><small>FORGE / FORGE2</small></div>
@@ -173,7 +173,7 @@
 
         <article class="panel route-table-panel">
           <div class="panel-header">
-            <div><p class="panel-kicker">HOST MAP</p><h2>Domain routes Table</h2></div>
+            <div><p class="panel-kicker">HOST MAP</p><h2>Domain route table</h2></div>
             <button class="text-action" data-go-page="rules">Manage routes</button>
           </div>
           <div class="table-wrap">
@@ -212,7 +212,7 @@
               <div><dt>Runtime uptime</dt><dd id="crossplayRuntime">--</dd></div>
               <div><dt>RakNet latency</dt><dd id="crossplayLatency">--</dd></div>
             </dl>
-            <p class="crossplay-message" id="crossplayMessage" aria-live="polite">Check the Geyser UDP status after saving the configuration.</p>
+            <p class="crossplay-message" id="crossplayMessage" aria-live="polite">Save the settings to check Geyser's UDP status.</p>
           </article>
           <article class="panel compatibility-panel">
             <div class="panel-header"><div><p class="panel-kicker">COMPATIBILITY</p><h2>Crossplay limits</h2></div></div>
@@ -224,9 +224,9 @@
           </article>
         </div>
         <article class="panel settings-panel">
-          <div class="panel-header"><div><p class="panel-kicker">CROSSPLAY MODE</p><h2>Crossplay settings</h2></div><span class="settings-hint" id="crossplaySettingsHint">External Geyser must use the same parameters</span></div>
+          <div class="panel-header"><div><p class="panel-kicker">CROSSPLAY MODE</p><h2>Crossplay settings</h2></div><span class="settings-hint" id="crossplaySettingsHint">External Geyser must use matching settings</span></div>
           <form id="crossplayForm" class="form-grid">
-            <label><span>Bedrock UDP Listen</span><input name="bedrock_listen" placeholder="0.0.0.0:19132" required><small>Allow this UDP port through the firewall if crossplay is enabled.</small></label>
+            <label><span>Bedrock UDP listen address</span><input name="bedrock_listen" placeholder="0.0.0.0:19132" required><small>Allow this UDP port through the firewall if crossplay is enabled.</small></label>
             <label><span>Java route hostname</span><input name="java_address" list="crossplayRouteHosts" placeholder="bedrock.example.com" required><datalist id="crossplayRouteHosts"></datalist><small>This hostname must match an enabled YvLink route and resolve to the local Java ingress.</small></label>
             <label><span>Java ingress port</span><input name="java_port" type="number" min="1" max="65535" required><small>Usually the same as the global Java listening port.</small></label>
             <label><span>Authentication method</span><select name="auth_type"><option value="online">Online · Java account required</option><option value="floodgate">Floodgate · Bedrock account</option><option value="offline">Offline · trusted test environments only</option></select><small>Offline mode is unsafe for public servers. Floodgate requires a compatible backend installation.</small></label>
@@ -237,11 +237,11 @@
                 <label><span>Run Mode</span><select name="geyser_mode"><option value="embedded">Embedded · load in process (default)</option><option value="subprocess">Subprocess · isolated child process</option></select><small>Embedded mode has less overhead, but a native library crash stops YvLink. Subprocess mode provides isolation.</small></label>
                 <label><span>MOTD First line</span><input name="geyser_motd_line1" maxlength="64"></label>
                 <label><span>MOTD Second line</span><input name="geyser_motd_line2" maxlength="64"></label>
-                <label class="geyser-embedded-only"><span>libgeyserlite.so Path</span><input name="geyser_library_path" placeholder="Leave blank Locate by environment variable/system path/automatic download"></label>
-                <label class="geyser-subprocess-only" hidden><span>Native executable path</span><input name="geyser_binary_path" placeholder="Leave blank to locate by environment variable/auto download"></label>
-                <label class="toggle-field full"><span><strong>Offline Mode</strong><small>Disallow any network access; the native library/executable must have been provided via path or embedded property.</small></span><input name="geyser_offline" type="checkbox"><i></i></label>
-                <label class="full geyser-floodgate-only" hidden><span>Floodgate key (16 bytes / 32 hex digits)</span><input name="geyser_floodgate_key" type="password" autocomplete="off" placeholder="00112233445566778899aabbccddeeff"><small class="field-warning">AES-128 key paired with the backend Floodgate; equivalent key file, please do not disclose to untrusted parties.</small></label>
-                <p class="field-note full">The default build has the automatic download feature enabled; binary gets libgeyserlite.so from GitHub Release and verifies SHA-256. Please use the offline production environment instead <code>--features geyserlite-embed</code> Build, or preset <code>GEYSERLITE_LIBRARY</code> Environmental variables.</p>
+                <label class="geyser-embedded-only"><span>libgeyserlite.so path</span><input name="geyser_library_path" placeholder="Leave blank for automatic detection or download"></label>
+                <label class="geyser-subprocess-only" hidden><span>Native executable path</span><input name="geyser_binary_path" placeholder="Leave blank for automatic detection or download"></label>
+                <label class="toggle-field full"><span><strong>Offline mode</strong><small>Disables downloads. Provide the native library or executable through a path or an embedded build.</small></span><input name="geyser_offline" type="checkbox"><i></i></label>
+                <label class="full geyser-floodgate-only" hidden><span>Floodgate key (16 bytes / 32 hex digits)</span><input name="geyser_floodgate_key" type="password" autocomplete="off" placeholder="00112233445566778899aabbccddeeff"><small class="field-warning">AES-128 key shared with the backend Floodgate plugin. Keep it secret.</small></label>
+                <p class="field-note full">The default build downloads libgeyserlite.so from a GitHub release and verifies its SHA-256 checksum. For an offline deployment, build with <code>--features geyserlite-embed</code> or set <code>GEYSERLITE_LIBRARY</code>.</p>
               </div>
             </section>
             <label class="toggle-field ingress-toggle full"><span><strong>Enable crossplay monitoring</strong><small>When enabled, the console uses RakNet Ping to verify that the Geyser is truly listening, rather than showing only the configuration as saved.</small></span><input name="enabled" type="checkbox"><i></i></label>
@@ -250,22 +250,22 @@
         </article>
         <div class="crossplay-grid via-grid">
           <article class="panel crossplay-status-panel">
-            <div class="panel-header"><div><p class="panel-kicker">VIALITE SIDECAR</p><h2>Backend Compatibility</h2></div><span class="live-label off" id="viaLiveLabel"><i></i><span id="viaHealthLabel">Not enabled</span></span></div>
+            <div class="panel-header"><div><p class="panel-kicker">VIALITE SIDECAR</p><h2>Backend compatibility</h2></div><span class="live-label off" id="viaLiveLabel"><i></i><span id="viaHealthLabel">Not enabled</span></span></div>
             <dl class="system-list">
-              <div><dt>Run Mode</dt><dd>Isolation process</dd></div>
+              <div><dt>Run Mode</dt><dd>Isolated subprocess</dd></div>
               <div><dt>Ingress protocol</dt><dd id="viaGateProtocol">--</dd></div>
-              <div><dt>Backend Protocol</dt><dd id="viaBackendVersion">--</dd></div>
+              <div><dt>Backend protocol</dt><dd id="viaBackendVersion">--</dd></div>
               <div><dt>Managed backends</dt><dd id="viaManagedBackends">--</dd></div>
-              <div><dt>Run Status</dt><dd id="viaRuntime">--</dd></div>
+              <div><dt>Runtime status</dt><dd id="viaRuntime">--</dd></div>
             </dl>
-            <p class="crossplay-message" id="viaMessage" aria-live="polite">After enabling, the domain name routing will be completed first, and then ViaLite will be connected to the actual backend.</p>
+            <p class="crossplay-message" id="viaMessage" aria-live="polite">YvLink selects a route before passing the connection through ViaLite to the backend.</p>
           </article>
           <article class="panel compatibility-panel">
             <div class="panel-header"><div><p class="panel-kicker">SAFE BOUNDARY</p><h2>Version compatibility limits</h2></div></div>
             <ul class="compatibility-list">
-              <li><strong>Backend Translation</strong><span>ViaLite Not in front of the client; the client must first be able to complete the YvLink Java handshake.</span></li>
-              <li><strong>No PROXY header</strong><span>When enabled, all routed proxy Protocols must be turned off to avoid breaking ViaLite's Minecraft handshake.</span></li>
-              <li><strong>Independent Geyser</strong><span>GeyserLite Responsible Bedrock→Java;ViaLite Deal only Java→Backend Version Difference.</span></li>
+              <li><strong>Backend protocol translation</strong><span>ViaLite runs after YvLink selects a route. Clients must first complete the YvLink Java handshake.</span></li>
+              <li><strong>No PROXY header</strong><span>When ViaLite is enabled, set PROXY Protocol to off on every route so it receives a valid Minecraft handshake.</span></li>
+              <li><strong>Separate responsibilities</strong><span>GeyserLite translates Bedrock to Java; ViaLite handles Java protocol differences with the backend.</span></li>
             </ul>
           </article>
         </div>
@@ -273,51 +273,51 @@
 
       <section class="page" id="page-settings">
         <div class="page-intro">
-          <div><span class="section-index">04 / SETTINGS</span><h2>Settings and optimization</h2><p>Centralized management of entry performance, version compatibility and automatic update status.</p></div>
+          <div><span class="section-index">04 / SETTINGS</span><h2>Settings and optimization</h2><p>Manage ingress performance, version compatibility, and update status.</p></div>
         </div>
         <div class="settings-summary-grid">
           <article class="panel update-panel">
             <div class="panel-header"><div><p class="panel-kicker">SAFE AUTO UPDATE</p><h2>Automatic updates</h2></div><span class="state-badge off" id="updateStateBadge">Checking</span></div>
             <div class="update-status-body">
-              <strong id="updateCurrentVersion">Current Version --</strong>
-              <p id="updateMessage" aria-live="polite">Reading update state…</p>
-              <div class="update-actions"><button class="secondary-button" id="updateRefreshButton" type="button">Refresh Status</button><span>Daily timed checks by systemd GitHub Release</span></div>
+              <strong id="updateCurrentVersion">Current version --</strong>
+              <p id="updateMessage" aria-live="polite">Loading update status…</p>
+              <div class="update-actions"><button class="secondary-button" id="updateRefreshButton" type="button">Refresh status</button><span>Daily systemd check for GitHub releases</span></div>
             </div>
           </article>
           <article class="panel optimization-panel">
             <div class="panel-header"><div><p class="panel-kicker">NETWORK PATH</p><h2>Packet path optimization</h2></div></div>
             <ul class="compatibility-list">
-              <li><strong>YvLink Entry optimization</strong><span>The TCP_NODELAY, replication buffer, socket buffer, and Backlog underneath immediately affect the proxy data path.</span></li>
-              <li><strong>NotEnoughBandwidth</strong><span>It is a Fabric client/server side Mod, not a proxy switch; please deploy at the same time as the client on your own Fabric backend, YvLink will keep the data transparent.</span></li>
+              <li><strong>YvLink ingress tuning</strong><span>TCP_NODELAY, copy buffers, socket buffers, and listen backlog affect the proxy's network path.</span></li>
+              <li><strong>NotEnoughBandwidth</strong><span>This Fabric mod runs on clients and backends. It is not a YvLink setting; YvLink forwards its traffic unchanged.</span></li>
             </ul>
           </article>
         </div>
         <article class="panel settings-panel via-settings-panel">
-          <div class="panel-header"><div><p class="panel-kicker">MANAGED VIALITE</p><h2>Java Backend Compatibility</h2></div><span class="settings-hint">Deployment script has been verified to install native runtime</span></div>
+          <div class="panel-header"><div><p class="panel-kicker">MANAGED VIALITE</p><h2>Java Backend compatibility</h2></div><span class="settings-hint">Install the ViaLite runtime before enabling this feature</span></div>
           <form id="viaForm" class="form-grid">
-            <label><span>ViaLite Executable</span><input name="binary_path" placeholder="/opt/mc-proxy/vialite/vialite"><small>Only absolute paths are accepted; the current server has preset this runtime.</small></label>
-            <label><span>Run-time Directory</span><input name="runtime_dir" placeholder="/run/mc-proxy/vialite" required><small>Only managed temporary JSON configurations are saved and automatically cleaned up after restart.</small></label>
-            <label><span>YvLink → ViaLite Agreements</span><input name="gate_protocol" value="auto" maxlength="64" required><small>Usually keep it. auto.</small></label>
-            <label><span>ViaLite → Backend Protocol</span><input name="backend_version" value="auto" maxlength="64" required><small>Backend masking Status Change to explicit version.</small></label>
-            <label class="toggle-field ingress-toggle full"><span><strong>Enable Java backend compatibility</strong><small>After saving, rebuild the isolation loop entrance by the enabled route; when unsuccessful, the agent will securely connect to the backend and report an error.</small></span><input name="enabled" type="checkbox"><i></i></label>
+            <label><span>ViaLite executable</span><input name="binary_path" placeholder="/opt/mc-proxy/vialite/vialite"><small>Use an absolute path to the installed ViaLite executable.</small></label>
+            <label><span>Runtime directory</span><input name="runtime_dir" placeholder="/run/mc-proxy/vialite" required><small>Temporary managed JSON files are stored here and cleaned up after restart.</small></label>
+            <label><span>YvLink → ViaLite protocol</span><input name="gate_protocol" value="auto" maxlength="64" required><small>Usually leave this as auto.</small></label>
+            <label><span>ViaLite → Backend protocol</span><input name="backend_version" value="auto" maxlength="64" required><small>Set an explicit version if the backend does not report its protocol in Status responses.</small></label>
+            <label class="toggle-field ingress-toggle full"><span><strong>Enable Java backend compatibility</strong><small>After saving, ViaLite creates loopback listeners for enabled routes. If it fails, YvLink connects directly to the backend and reports the error.</small></span><input name="enabled" type="checkbox"><i></i></label>
             <div class="form-actions"><button class="primary-button" type="submit">Save ViaLite configuration</button></div>
           </form>
         </article>
         <article class="panel settings-panel">
-          <div class="panel-header"><div><p class="panel-kicker">GLOBAL SETTINGS</p><h2>Connect and Performance Parameters</h2></div><span class="settings-hint">Apply immediately after saving</span></div>
+          <div class="panel-header"><div><p class="panel-kicker">GLOBAL SETTINGS</p><h2>Connection and performance settings</h2></div><span class="settings-hint">Changes apply when saved</span></div>
           <form id="settingsForm" class="form-grid">
             <label><span>Minecraft listen address</span><input name="listen" placeholder="0.0.0.0:25565" required><small>All domain name rules share the same IP and port.</small></label>
-            <label><span>Maximum connections</span><input name="max_connections" type="number" min="1" max="1000000" required><small>Total number of concurrent connections allowed at the entrance.</small></label>
+            <label><span>Maximum connections</span><input name="max_connections" type="number" min="1" max="1000000" required><small>Maximum concurrent connections at the ingress.</small></label>
             <label><span>Backend connection timeout</span><span class="input-unit"><input name="connect_timeout_ms" type="number" min="1" required><b>ms</b></span><small>Maximum wait time to connect to actual game server.</small></label>
-            <label><span>Handshake timeout</span><span class="input-unit"><input name="handshake_timeout_ms" type="number" min="1" required><b>ms</b></span><small>The maximum time to wait for the Minecraft Java handshake domain name.</small></label>
-            <label><span>Graceful shutdown period</span><span class="input-unit"><input name="shutdown_grace_secs" type="number" min="1" max="300" required><b>s</b></span><small>Wait for the existing connection to end when reloading the portal.</small></label>
-            <label><span>Per-connection copy buffer</span><span class="input-unit"><input name="copy_buffer_bytes" type="number" min="4096" max="1048576" step="1024" required><b>bytes</b></span><small>One for each connection, one for each direction.</small></label>
-            <label><span>Kernel Socket buffer</span><span class="input-unit"><input name="socket_buffer_bytes" type="number" min="0" max="16777216" step="1024" required><b>bytes</b></span><small>Using operating system defaults when set to 0.</small></label>
+            <label><span>Handshake timeout</span><span class="input-unit"><input name="handshake_timeout_ms" type="number" min="1" required><b>ms</b></span><small>Maximum time to read the hostname from a Minecraft Java handshake.</small></label>
+            <label><span>Graceful shutdown period</span><span class="input-unit"><input name="shutdown_grace_secs" type="number" min="1" max="300" required><b>s</b></span><small>Time allowed for existing connections to close during shutdown.</small></label>
+            <label><span>Per-connection copy buffer</span><span class="input-unit"><input name="copy_buffer_bytes" type="number" min="4096" max="1048576" step="1024" required><b>bytes</b></span><small>Allocated per connection and direction.</small></label>
+            <label><span>Kernel Socket buffer</span><span class="input-unit"><input name="socket_buffer_bytes" type="number" min="0" max="16777216" step="1024" required><b>bytes</b></span><small>Set to 0 to use the operating system default.</small></label>
             <label><span>Listen Backlog</span><span class="input-unit"><input name="listen_backlog" type="number" min="1" max="65535" required><b>conn</b></span><small>Length of kernel connection queue waiting for accept.</small></label>
-            <label><span>Statistics log interval</span><span class="input-unit"><input name="stats_interval_secs" type="number" min="1" required><b>s</b></span><small>Server-side aggregation log output frequency.</small></label>
-            <label class="toggle-field"><span><strong>TCP_NODELAY</strong><small>Reduce Nagle wait for Minecraft small packets.</small></span><input name="tcp_nodelay" type="checkbox"><i></i></label>
-            <label class="toggle-field"><span><strong>SO_REUSEPORT</strong><small>Enable only when multiple instances of Linux share the same port.</small></span><input name="reuse_port" type="checkbox"><i></i></label>
-            <label class="toggle-field ingress-toggle"><span><strong>Enable Minecraft ingress</strong><small>Admin console remains online after shutdown.</small></span><input name="proxy_enabled" type="checkbox"><i></i></label>
+            <label><span>Statistics log interval</span><span class="input-unit"><input name="stats_interval_secs" type="number" min="1" required><b>s</b></span><small>How often aggregate statistics are logged.</small></label>
+            <label class="toggle-field"><span><strong>TCP_NODELAY</strong><small>Reduce delays from Nagle's algorithm for small Minecraft packets.</small></span><input name="tcp_nodelay" type="checkbox"><i></i></label>
+            <label class="toggle-field"><span><strong>SO_REUSEPORT</strong><small>Enable only when multiple Linux instances share this port.</small></span><input name="reuse_port" type="checkbox"><i></i></label>
+            <label class="toggle-field ingress-toggle"><span><strong>Enable Minecraft ingress</strong><small>The admin console remains available when Minecraft ingress is disabled.</small></span><input name="proxy_enabled" type="checkbox"><i></i></label>
             <div class="form-actions"><button class="primary-button" type="submit">Save and apply configuration</button></div>
           </form>
         </article>
@@ -335,52 +335,52 @@
         <label><span>Rule ID</span><input name="id" pattern="[A-Za-z0-9_-]{1,32}" maxlength="32" required><small>Cannot be changed after saving, only letters, numbers, dashes and underscores are allowed.</small></label>
         <label><span>Display name</span><input name="name" maxlength="64" required></label>
         <label class="full"><span>Match Host</span><input name="host" placeholder="play.example.com, *.example.com" required><small>Separate hosts with commas. Wildcards * and ? are supported; put a standalone * last.</small></label>
-        <label class="full"><span>Backend Address Pool</span><textarea name="backend" rows="3" placeholder="backend-a.example.com:25565&#10;backend-b.example.com:25565" required></textarea><small>one host per line or comma: ports, up to 128; automatically try the next when the current backend is unavailable.</small></label>
-        <label class="full"><span>Load Balance Policy</span><select name="strategy"><option value="sequential">Sequential failover</option><option value="random">Random</option><option value="round-robin">Round robin</option><option value="least-connections">Least connections</option><option value="lowest-latency">Lowest latency</option></select><small>sequential mode, the first healthy backend will be used first; other modes will select the target first, and continue to try the rest of the backend in the pool after failure.</small></label>
-        <label class="full"><span>Real IP Pass(PROXY Protocol)</span><select name="proxy_protocol" aria-describedby="proxyProtocolHelp"><option value="off">Off (default)</option><option value="v1">v1 · Text Header</option><option value="v2">v2 · Binary Header</option></select><small id="proxyProtocolHelp" class="field-warning">Enabled only if the backend listener explicitly supports the same version; a normal Minecraft server will not be able to complete the handshake when it receives the head. Please also restrict back-end ports to allow proxy access only.</small></label>
-        <label class="toggle-field full"><span><strong>Rewrite backend handshake Host</strong><small>Change the handshake domain name to the back-end hostname; enable when the proxy public server or back-end requires a fixed domain name.</small></span><input name="modify_virtual_host" type="checkbox"><i></i></label>
-        <label class="toggle-field full"><span><strong>Allow Bedrock crossplay</strong><small>Allows the global Crossplay entry to use this route as Java upstream. When global interworking is enabled, the selected Java routing domain name must match a rule that is enabled and allows interworking.</small></span><input name="crossplay_enabled" type="checkbox"><i></i></label>
+        <label class="full"><span>Backend pool</span><textarea name="backend" rows="3" placeholder="backend-a.example.com:25565&#10;backend-b.example.com:25565" required></textarea><small>Enter host:port addresses, one per line or separated by commas (up to 128). YvLink tries another backend if one fails.</small></label>
+        <label class="full"><span>Load balancing strategy</span><select name="strategy"><option value="sequential">Sequential failover</option><option value="random">Random</option><option value="round-robin">Round robin</option><option value="least-connections">Least connections</option><option value="lowest-latency">Lowest latency</option></select><small>Sequential mode prefers the first healthy backend. Other strategies select a target, then try the remaining backends on failure.</small></label>
+        <label class="full"><span>Real IP forwarding (PROXY Protocol)</span><select name="proxy_protocol" aria-describedby="proxyProtocolHelp"><option value="off">Off (default)</option><option value="v1">v1 · text header</option><option value="v2">v2 · binary header</option></select><small id="proxyProtocolHelp" class="field-warning">Enable only if the backend supports the selected PROXY Protocol version. A standard Minecraft server cannot read this header. Restrict the backend port to trusted proxy connections.</small></label>
+        <label class="toggle-field full"><span><strong>Rewrite handshake hostname</strong><small>Replace the client's handshake hostname with the backend hostname when the backend requires a fixed host.</small></span><input name="modify_virtual_host" type="checkbox"><i></i></label>
+        <label class="toggle-field full"><span><strong>Allow Bedrock crossplay</strong><small>Allow the global Bedrock ingress to use this route as its Java upstream. Its Java hostname must match an enabled route that permits crossplay.</small></span><input name="crossplay_enabled" type="checkbox"><i></i></label>
         <section class="protocol-section full" aria-labelledby="healthCheckSectionTitle">
-          <label class="toggle-field"><span><strong id="healthCheckSectionTitle">Active back-end health check</strong><small>Proactively probe backend when idle; consecutive failed nodes will be queued after healthy nodes.</small></span><input name="health_check_enabled" type="checkbox" aria-controls="healthCheckFields"><i></i></label>
+          <label class="toggle-field"><span><strong id="healthCheckSectionTitle">Active backend health checks</strong><small>Probe backends even when idle. Unhealthy backends are tried after healthy ones.</small></span><input name="health_check_enabled" type="checkbox" aria-controls="healthCheckFields"><i></i></label>
           <div class="nested-fields" id="healthCheckFields" hidden>
-            <label class="full"><span>Detection Mode</span><select name="health_check_mode" aria-describedby="healthCheckModeHelp"><option value="tcp">TCP port check</option><option value="minecraft-status">Minecraft Status + Ping (recommended)</option></select><small id="healthCheckModeHelp">Status The mode will complete the Java handshake, validate the status JSON and Pong, and identify the "port online but the game service is abnormal"".</small></label>
-            <label><span>Check interval</span><span class="input-unit"><input name="health_check_interval_secs" type="number" min="1" max="86400"><b>s</b></span><small>Recommendations 15–60 seconds, too short will increase the back-end connection log.</small></label>
-            <label><span>Full detection timeout</span><span class="input-unit"><input name="health_check_timeout_ms" type="number" min="100" max="60000"><b>ms</b></span><small>The connection, status, and ping must be enabled and must not be greater than the check interval.</small></label>
+            <label class="full"><span>Check mode</span><select name="health_check_mode" aria-describedby="healthCheckModeHelp"><option value="tcp">TCP port check</option><option value="minecraft-status">Minecraft Status + Ping (recommended)</option></select><small id="healthCheckModeHelp">Minecraft Status mode checks the Java handshake, status JSON, and Pong to detect a server whose TCP port is open but whose game service is unhealthy.</small></label>
+            <label><span>Check interval</span><span class="input-unit"><input name="health_check_interval_secs" type="number" min="1" max="86400"><b>s</b></span><small>Recommended: 15–60 seconds. Short intervals create more backend connections.</small></label>
+            <label><span>Probe timeout</span><span class="input-unit"><input name="health_check_timeout_ms" type="number" min="100" max="60000"><b>ms</b></span><small>Covers connection, Status, and Ping. Must not exceed the check interval.</small></label>
             <label><span>Offline threshold</span><input name="health_check_unhealthy_threshold" type="number" min="1" max="100"><small>How many consecutive failures to mark offline.</small></label>
             <label><span>Recovery threshold</span><input name="health_check_healthy_threshold" type="number" min="1" max="100"><small>How many consecutive successful attempts to restore health.</small></label>
-            <label class="minecraft-health-only"><span>Probe Host (optional)</span><input name="health_check_minecraft_host" maxlength="255" placeholder="Automatic by routing or back-end derivation"><small>When the backend requires a fixed virtual host; wildcards are not supported.</small></label>
-            <label class="minecraft-health-only"><span>Detection protocol number</span><input name="health_check_minecraft_protocol" type="number" min="0" max="2147483647"><small>Default 769; most servers will respond normally to different versions of Status.</small></label>
-            <p class="field-note full">Status mode only validates server list protocols, does not perform login or module negotiation; all nodes will still make the last real connection attempt when offline.</p>
+            <label class="minecraft-health-only"><span>Probe hostname (optional)</span><input name="health_check_minecraft_host" maxlength="255" placeholder="Use route or backend hostname automatically"><small>Use when the backend requires a fixed virtual host. Wildcards are not supported.</small></label>
+            <label class="minecraft-health-only"><span>Probe protocol number</span><input name="health_check_minecraft_protocol" type="number" min="0" max="2147483647"><small>Defaults to 769. Most servers answer Status requests from other protocol versions.</small></label>
+            <p class="field-note full">Status checks validate the server list protocol, not login or mod negotiation. YvLink still attempts a real connection if every backend is marked offline.</p>
           </div>
         </section>
         <section class="protocol-section full" aria-labelledby="statusSectionTitle">
-          <label class="toggle-field"><span><strong id="statusSectionTitle">Proxy Host Status Response</strong><small>Fully customized, or on-demand overwriting after keeping backend module fields.</small></span><input name="status_enabled" type="checkbox" aria-controls="statusFields"><i></i></label>
+          <label class="toggle-field"><span><strong id="statusSectionTitle">Proxy-managed Status response</strong><small>Generate a response or selectively override backend fields while preserving mod metadata.</small></span><input name="status_enabled" type="checkbox" aria-controls="statusFields"><i></i></label>
           <div class="nested-fields" id="statusFields" hidden>
-            <label><span>State Source</span><select name="status_mode"><option value="custom">All generated by proxy</option><option value="backend">Backend Override</option></select><small>Module server recommended backend mode, forgeData, modinfo and favicon.</small></label>
-            <label class="backend-status-only"><span>Cache TTL</span><span class="input-unit"><input name="status_cache_ttl_secs" type="number" min="-1" max="86400"><b>s</b></span><small>-1 Disabled; Cached separately by backend and client protocols.</small></label>
-            <label class="full"><span>MOTD / Text Component</span><textarea name="status_motd" rows="3" maxlength="2048" placeholder="Leave the back-end mode blank to keep the original value"></textarea><small>Support § Color code or full JSON text component; backend mode left blank to not overwrite.</small></label>
-            <label><span>Version Display</span><input name="status_version_name" maxlength="64" placeholder="Save backend"></label>
-            <label><span>Protocol number</span><input name="status_protocol" type="number" placeholder="Leave empty or follow"><small>Leave blank to follow client when fully customized; Leave blank for backend mode.</small></label>
-            <label><span>Show the number of people online</span><input name="status_online" type="number" min="0" max="1000000" placeholder="Keep empty"></label>
-            <label><span>Show maximum number</span><input name="status_max" type="number" min="0" max="1000000" placeholder="Keep empty"></label>
-            <label class="toggle-field full backend-status-only"><span><strong>Backend Offline fallback</strong><small>Return readable status to server list when connection or status resolution fails.</small></span><input name="status_fallback_enabled" type="checkbox" aria-controls="fallbackFields"><i></i></label>
+            <label><span>Status source</span><select name="status_mode"><option value="custom">Generated by proxy</option><option value="backend">Backend with overrides</option></select><small>Module server recommended backend mode, forgeData, modinfo and favicon.</small></label>
+            <label class="backend-status-only"><span>Cache TTL</span><span class="input-unit"><input name="status_cache_ttl_secs" type="number" min="-1" max="86400"><b>s</b></span><small>Set to -1 to disable caching. Entries are cached per backend and client protocol.</small></label>
+            <label class="full"><span>MOTD / Text Component</span><textarea name="status_motd" rows="3" maxlength="2048" placeholder="Leave blank to preserve backend value"></textarea><small>Accepts § color codes or a JSON text component. Leave blank in backend mode to preserve the backend value.</small></label>
+            <label><span>Displayed version</span><input name="status_version_name" maxlength="64" placeholder="Preserve backend value"></label>
+            <label><span>Protocol number</span><input name="status_protocol" type="number" placeholder="Follow client protocol"><small>Leave blank to follow the client in custom mode or preserve the backend value in backend mode.</small></label>
+            <label><span>Displayed online players</span><input name="status_online" type="number" min="0" max="1000000" placeholder="Preserve backend value"></label>
+            <label><span>Displayed maximum players</span><input name="status_max" type="number" min="0" max="1000000" placeholder="Preserve backend value"></label>
+            <label class="toggle-field full backend-status-only"><span><strong>Offline backend fallback</strong><small>Return a readable server list response when backend connection or Status fails.</small></span><input name="status_fallback_enabled" type="checkbox" aria-controls="fallbackFields"><i></i></label>
             <div class="nested-fields full fallback-fields" id="fallbackFields" hidden>
               <label class="full"><span>Offline MOTD</span><textarea name="fallback_motd" rows="2" maxlength="2048" placeholder="§cServer maintenance in progress, please try again later"></textarea></label>
               <label><span>Offline version display</span><input name="fallback_version_name" maxlength="64" placeholder="Backend Offline"></label>
               <label><span>Offline protocol number</span><input name="fallback_protocol" type="number" placeholder="-1"></label>
-              <label><span>Offline online</span><input name="fallback_online" type="number" min="0" max="1000000" placeholder="0"></label>
-              <label><span>Maximum number offline</span><input name="fallback_max" type="number" min="0" max="1000000" placeholder="100"></label>
+              <label><span>Fallback online players</span><input name="fallback_online" type="number" min="0" max="1000000" placeholder="0"></label>
+              <label><span>Fallback maximum players</span><input name="fallback_max" type="number" min="0" max="1000000" placeholder="100"></label>
             </div>
           </div>
         </section>
         <section class="protocol-section full" aria-labelledby="whitelistSectionTitle">
-          <label class="toggle-field"><span><strong id="whitelistSectionTitle">Proxy White List</strong><small>Read Login Start player name before connecting backend and reject it in advance.</small></span><input name="whitelist_enabled" type="checkbox" aria-controls="whitelistFields"><i></i></label>
+          <label class="toggle-field"><span><strong id="whitelistSectionTitle">Proxy whitelist</strong><small>Read the player's name from Login Start and reject unlisted players before connecting to a backend.</small></span><input name="whitelist_enabled" type="checkbox" aria-controls="whitelistFields"><i></i></label>
           <div class="nested-fields" id="whitelistFields" hidden>
-            <label class="full"><span>Allowed Player Name</span><textarea name="whitelist" rows="4" placeholder="Alice&#10;Bob"></textarea><small>Separate one player name per line or comma, case-insensitive, up to 10,000.</small></label>
-            <label class="full"><span>Whitelist rejection message</span><textarea name="whitelist_message" rows="2" maxlength="1024" placeholder="§cYou are not in the whitelist of this server."></textarea><small>Agents are only screened in advance, and the player identity is ultimately still authenticated by the online mode backend.</small></label>
+            <label class="full"><span>Allowed player names</span><textarea name="whitelist" rows="4" placeholder="Alice&#10;Bob"></textarea><small>Separate one player name per line or comma, case-insensitive, up to 10,000.</small></label>
+            <label class="full"><span>Whitelist rejection message</span><textarea name="whitelist_message" rows="2" maxlength="1024" placeholder="§cYou are not in the whitelist of this server."></textarea><small>This is an early name check. The backend remains responsible for authenticating player identity.</small></label>
           </div>
         </section>
-        <label class="toggle-field full"><span><strong>Enable immediately</strong><small>Include the current single-port routing table when enabled.</small></span><input name="enabled" type="checkbox" checked><i></i></label>
+        <label class="toggle-field full"><span><strong>Enable route</strong><small>Include this route in the shared ingress when enabled.</small></span><input name="enabled" type="checkbox" checked><i></i></label>
         <div class="form-actions full"><button class="secondary-button" type="button" data-close-modal>Cancel</button><button class="primary-button" type="submit">Save route</button></div>
       </form>
     </section>
@@ -388,9 +388,9 @@
 
   <div class="modal-backdrop update-notice" id="updateNotice" hidden>
     <section class="modal update-notice-card" role="dialog" aria-modal="true" aria-labelledby="updateNoticeTitle" aria-describedby="updateNoticeMessage">
-      <div class="modal-header"><div><p class="panel-kicker">AUTO UPDATE</p><h2 id="updateNoticeTitle">Automatic updates status</h2></div><button class="icon-button" id="closeUpdateNotice" type="button" aria-label="Close Autoupdate Hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <div class="modal-header"><div><p class="panel-kicker">AUTO UPDATE</p><h2 id="updateNoticeTitle">Automatic update status</h2></div><button class="icon-button" id="closeUpdateNotice" type="button" aria-label="Close update notice"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
       <p class="update-notice-message" id="updateNoticeMessage"></p>
-      <div class="form-actions"><button class="secondary-button" id="dismissUpdateNotice" type="button">Okay.</button><button class="primary-button" id="openUpdateSettings" type="button">View Update Settings</button></div>
+      <div class="form-actions"><button class="secondary-button" id="dismissUpdateNotice" type="button">OK</button><button class="primary-button" id="openUpdateSettings" type="button">View update settings</button></div>
     </section>
   </div>
 
@@ -405,7 +405,7 @@
         <div class="auth-brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><div><p>SECURE CONTROL PLANE</p><h1>YvLink</h1></div></div>
         <p class="auth-copy">Manage Minecraft Java single-port domain name routing, real-time traffic and entry parameters.</p>
         <form id="loginForm">
-          <label><span>Admin token</span><input id="tokenInput" type="password" autocomplete="current-password" minlength="32" required><small>After logging in, it will be saved in this browser, and the refresh page does not need to be repeatedly entered; click "Log out" to clear the address space immediately.</small></label>
+          <label><span>Admin token</span><input id="tokenInput" type="password" autocomplete="current-password" minlength="32" required><small>The token is stored in this browser so you do not need to re-enter it after refreshing. Click "Log out" to clear it.</small></label>
           <p class="form-error" id="loginError" aria-live="polite"></p>
           <button class="primary-button wide" type="submit">Open console</button>
         </form>
