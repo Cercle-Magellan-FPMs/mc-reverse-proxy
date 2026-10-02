@@ -290,6 +290,7 @@ ViaLite runs after YvLink selects a route and before it connects to the Java bac
 Install the verified runtime before enabling ViaLite in the console or configuration:
 
 ```sh
+sudo install -d -m 0755 /usr/local/lib/mc-proxy
 sudo install -m 0755 deploy/install-vialite.sh /usr/local/lib/mc-proxy/install-vialite.sh
 sudo /usr/local/lib/mc-proxy/install-vialite.sh
 ```
